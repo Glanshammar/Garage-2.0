@@ -6,6 +6,5 @@
         Motorcycle,
         Bus,
         Boat
-
     }
 }

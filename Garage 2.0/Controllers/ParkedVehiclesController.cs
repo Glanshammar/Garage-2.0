@@ -61,22 +61,30 @@ namespace Garage_2._0.Controllers
         // GET: ParkedVehicles/Create
         public IActionResult Create()
         {
+            ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
             return View();
         }
 
         // POST: ParkedVehicles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,VehicleType,RegistrationNumber,Color,Brand,Model,NumberOfWheels,ArrivalTime")] ParkedVehicle parkedVehicle)
+        public async Task<IActionResult> Create([Bind("Id,VehicleType,RegistrationNumber,Color,Brand,Model,NumberOfWheels")] ParkedVehicle parkedVehicle)
         {
             if (ModelState.IsValid)
             {
+                // Check if the registration number already exists
+                if (await _context.ParkedVehicle.AnyAsync(v => v.RegistrationNumber == parkedVehicle.RegistrationNumber))
+                {
+                    ModelState.AddModelError("RegistrationNumber", "This registration number is already in use.");
+                    ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
+                    return View(parkedVehicle);
+                }
+
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
             return View(parkedVehicle);
         }
 
@@ -93,15 +101,14 @@ namespace Garage_2._0.Controllers
             {
                 return NotFound();
             }
+            ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
             return View(parkedVehicle);
         }
 
         // POST: ParkedVehicles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,VehicleType,RegistrationNumber,Color,Brand,Model,NumberOfWheels,ArrivalTime")] ParkedVehicle parkedVehicle)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,VehicleType,RegistrationNumber,Color,Brand,Model,NumberOfWheels")] ParkedVehicle parkedVehicle)
         {
             if (id != parkedVehicle.Id)
             {
@@ -112,7 +119,28 @@ namespace Garage_2._0.Controllers
             {
                 try
                 {
-                    _context.Update(parkedVehicle);
+                    var existingVehicle = await _context.ParkedVehicle.FindAsync(id);
+                    if (existingVehicle == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Check if the registration number already exists (excluding the current vehicle)
+                    if (await _context.ParkedVehicle.AnyAsync(v => v.RegistrationNumber == parkedVehicle.RegistrationNumber && v.Id != id))
+                    {
+                        ModelState.AddModelError("RegistrationNumber", "This registration number is already in use.");
+                        ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
+                        return View(parkedVehicle);
+                    }
+
+                    existingVehicle.VehicleType = parkedVehicle.VehicleType;
+                    existingVehicle.RegistrationNumber = parkedVehicle.RegistrationNumber;
+                    existingVehicle.Color = parkedVehicle.Color;
+                    existingVehicle.Brand = parkedVehicle.Brand;
+                    existingVehicle.Model = parkedVehicle.Model;
+                    existingVehicle.NumberOfWheels = parkedVehicle.NumberOfWheels;
+
+                    _context.Update(existingVehicle);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -128,6 +156,7 @@ namespace Garage_2._0.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
             return View(parkedVehicle);
         }
 
