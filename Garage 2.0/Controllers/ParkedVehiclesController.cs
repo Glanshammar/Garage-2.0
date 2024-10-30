@@ -98,6 +98,10 @@ namespace Garage_2._0.Controllers
 
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
+
+                // Invalidate the cache
+                _cache.Remove("ParkedVehiclesIndex");
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
@@ -158,6 +162,9 @@ namespace Garage_2._0.Controllers
 
                     _context.Update(existingVehicle);
                     await _context.SaveChangesAsync();
+
+                    // Invalidate the cache
+                    _cache.Remove("ParkedVehiclesIndex");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
