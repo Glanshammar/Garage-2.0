@@ -57,6 +57,14 @@ namespace Garage_2._0.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check if the registration number already exists
+                if (await _context.ParkedVehicle.AnyAsync(v => v.RegistrationNumber == parkedVehicle.RegistrationNumber))
+                {
+                    ModelState.AddModelError("RegistrationNumber", "This registration number is already in use.");
+                    ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
+                    return View(parkedVehicle);
+                }
+
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -100,6 +108,14 @@ namespace Garage_2._0.Controllers
                     if (existingVehicle == null)
                     {
                         return NotFound();
+                    }
+
+                    // Check if the registration number already exists (excluding the current vehicle)
+                    if (await _context.ParkedVehicle.AnyAsync(v => v.RegistrationNumber == parkedVehicle.RegistrationNumber && v.Id != id))
+                    {
+                        ModelState.AddModelError("RegistrationNumber", "This registration number is already in use.");
+                        ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
+                        return View(parkedVehicle);
                     }
 
                     existingVehicle.VehicleType = parkedVehicle.VehicleType;
