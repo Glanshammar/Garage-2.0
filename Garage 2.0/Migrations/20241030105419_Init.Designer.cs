@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Garage_2._0.Migrations
 {
     [DbContext(typeof(Garage_2_0Context))]
-    [Migration("20241030093016_Init")]
+    [Migration("20241030105419_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -56,13 +56,47 @@ namespace Garage_2._0.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("VehicleType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("VehicleType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.ToTable("ParkedVehicle");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ArrivalTime = new DateTime(2024, 10, 30, 11, 54, 18, 268, DateTimeKind.Local).AddTicks(6377),
+                            Brand = "Volkswagen",
+                            Color = "Blue",
+                            Model = "Jetta",
+                            NumberOfWheels = 4,
+                            RegistrationNumber = "ABC123",
+                            VehicleType = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ArrivalTime = new DateTime(2024, 10, 30, 11, 54, 18, 268, DateTimeKind.Local).AddTicks(6436),
+                            Brand = "Volkswagen",
+                            Color = "Blue",
+                            Model = "Taos",
+                            NumberOfWheels = 4,
+                            RegistrationNumber = "DEF123",
+                            VehicleType = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ArrivalTime = new DateTime(2024, 10, 30, 11, 54, 18, 268, DateTimeKind.Local).AddTicks(6440),
+                            Brand = "Something",
+                            Color = "Black",
+                            Model = "OrOther",
+                            NumberOfWheels = 2,
+                            RegistrationNumber = "CTF345",
+                            VehicleType = 1
+                        });
                 });
 #pragma warning restore 612, 618
         }

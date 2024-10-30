@@ -64,7 +64,7 @@ namespace Garage_2._0.Migrations
                         new
                         {
                             Id = 1,
-                            ArrivalTime = new DateTime(2024, 10, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ArrivalTime = new DateTime(2024, 10, 30, 11, 54, 18, 268, DateTimeKind.Local).AddTicks(6377),
                             Brand = "Volkswagen",
                             Color = "Blue",
                             Model = "Jetta",
@@ -75,7 +75,7 @@ namespace Garage_2._0.Migrations
                         new
                         {
                             Id = 2,
-                            ArrivalTime = new DateTime(2024, 10, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ArrivalTime = new DateTime(2024, 10, 30, 11, 54, 18, 268, DateTimeKind.Local).AddTicks(6436),
                             Brand = "Volkswagen",
                             Color = "Blue",
                             Model = "Taos",
@@ -86,7 +86,7 @@ namespace Garage_2._0.Migrations
                         new
                         {
                             Id = 3,
-                            ArrivalTime = new DateTime(2024, 10, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ArrivalTime = new DateTime(2024, 10, 30, 11, 54, 18, 268, DateTimeKind.Local).AddTicks(6440),
                             Brand = "Something",
                             Color = "Black",
                             Model = "OrOther",
