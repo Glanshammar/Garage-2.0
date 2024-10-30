@@ -14,30 +14,46 @@ namespace Garage_2._0.Controllers
     public class ParkedVehiclesController : Controller
     {
         private readonly Garage_2_0Context _context;
-
-        public ParkedVehiclesController(Garage_2_0Context context)
+        private readonly IMemoryCache _cache;
+        
+        public ParkedVehiclesController(Garage_2_0Context context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         // GET: ParkedVehicles
         
         public async Task<IActionResult> Index()
         {
-            var parkedVehicles =  _context.ParkedVehicle.Select(e => new ParkedVehicleIndexViewModel
+            const string cacheKey = "ParkedVehiclesIndex";
+    
+            if (!_cache.TryGetValue(cacheKey, out List<ParkedVehicleIndexViewModel> model))
             {
-                Id = e.Id,
-                VehicleType = e.VehicleType,
-                RegistrationNumber = e.RegistrationNumber,
-                ArrivalTime = e.ArrivalTime,
-                ParkedTime = DateTime.Now.Subtract(e.ArrivalTime)
+                // Cache miss, so we need to query the database
+                var parkedVehicles = await _context.ParkedVehicle
+                    .Select(e => new ParkedVehicleIndexViewModel
+                    {
+                        Id = e.Id,
+                        VehicleType = e.VehicleType,
+                        RegistrationNumber = e.RegistrationNumber,
+                        ArrivalTime = e.ArrivalTime,
+                        ParkedTime = DateTime.Now.Subtract(e.ArrivalTime)
+                    })
+                    .ToListAsync();
 
-            });
+                // Set cache options
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+                    .SetAbsoluteExpiration(TimeSpan.FromHours(1));
 
-            var model = await parkedVehicles.ToListAsync();
+                // Save data in cache
+                _cache.Set(cacheKey, parkedVehicles, cacheEntryOptions);
 
-            return View("Index",model);
+                model = parkedVehicles;
+            }
 
+            return View("Index", model);
         }
 
         // GET: ParkedVehicles/Details/5

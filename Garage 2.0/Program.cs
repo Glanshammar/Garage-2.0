@@ -13,6 +13,7 @@ namespace Garage_2._0
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddMemoryCache();
 
             var app = builder.Build();
 
