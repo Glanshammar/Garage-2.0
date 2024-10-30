@@ -36,6 +36,11 @@ namespace Garage_2._0.Models
         [Required(ErrorMessage = "Arrival time is required.")]
         [Display(Name = "Arrival Time")]
         [DataType(DataType.DateTime)]
-        public DateTime ArrivalTime { get; set; }
+        public DateTime ArrivalTime { get; private set; }
+
+        public ParkedVehicle()
+        {
+            ArrivalTime = DateTime.Now;
+        }
     }
 }
