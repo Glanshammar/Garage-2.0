@@ -9,7 +9,7 @@ namespace Garage_2._0.Models
 
         [Required(ErrorMessage = "Vehicle type is required.")]
         [Display(Name = "Vehicle Type")]
-        public string VehicleType { get; set; }
+        public VehicleType VehicleType { get; set; }
 
         [Required(ErrorMessage = "Registration number is required.")]
         [Display(Name = "Registration Number")]
