@@ -28,6 +28,7 @@ namespace Garage_2._0.Controllers
         {
             const string cacheKey = "ParkedVehiclesIndex";
     
+            // Attempt to get the cached value
             if (!_cache.TryGetValue(cacheKey, out List<ParkedVehicleIndexViewModel> model))
             {
                 // Cache miss, so we need to query the database
@@ -50,10 +51,12 @@ namespace Garage_2._0.Controllers
                 // Save data in cache
                 _cache.Set(cacheKey, parkedVehicles, cacheEntryOptions);
 
+                // Assign the freshly queried data to model
                 model = parkedVehicles;
             }
 
-            return View("Index", model);
+            // Ensure model is not null before passing to the view
+            return View("Index", model ?? new List<ParkedVehicleIndexViewModel>());
         }
 
         // GET: ParkedVehicles/Details/5
