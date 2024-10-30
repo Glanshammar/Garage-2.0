@@ -17,7 +17,7 @@ namespace Garage_2._0.Models.ViewModels
         public DateTime ArrivalTime { get; set; }
 
         [Display(Name = "Time Parked")]
-        [StringSyntax("TimeSpanFormat")]
+        [DisplayFormat(DataFormatString = @"{0:dd\:hh\:mm}")]
         public TimeSpan ParkedTime { get; set; }
     }
 }
