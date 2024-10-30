@@ -13,7 +13,8 @@ namespace Garage_2._0.Models
 
         [Required(ErrorMessage = "Registration number is required.")]
         [Display(Name = "Registration Number")]
-        [StringLength(10, MinimumLength = 4, ErrorMessage = "Registration number must be between 4 and 10 characters.")]
+        [StringLength(6, MinimumLength = 6, ErrorMessage = "Registration number must be exactly 6 characters.")]
+        [RegularExpression(@"^[A-Z]{3}\s?[0-9]{3}$", ErrorMessage = "Invalid registration number format. Use the format 'ABC 123'.")]
         public string RegistrationNumber { get; set; }
 
         [Required(ErrorMessage = "Color is required.")]
