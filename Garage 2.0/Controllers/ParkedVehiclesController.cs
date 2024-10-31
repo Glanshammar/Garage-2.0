@@ -24,15 +24,22 @@ namespace Garage_2._0.Controllers
 
         // GET: ParkedVehicles
         
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
             const string cacheKey = "ParkedVehiclesIndex";
-    
+
+            ViewData["VehicleTypeSortParm"] = sortOrder == "vehicleType" ? "vehicleType_desc" : "vehicleType";
+            ViewData["RegistrationNumberSortParm"] = sortOrder == "registrationNumber" ? "registrationNumber_desc" : "registrationNumber";
+            ViewData["ArrivalTimeSortParm"] = sortOrder == "arrivalTime" ? "arrivalTime_desc" : "arrivalTime";
+            ViewData["CurrentSort"] = sortOrder;
+
+            List<ParkedVehicleIndexViewModel> model;
+
             // Attempt to get the cached value
-            if (!_cache.TryGetValue(cacheKey, out List<ParkedVehicleIndexViewModel> model))
+            if (!_cache.TryGetValue(cacheKey, out model))
             {
                 // Cache miss, so we need to query the database
-                var parkedVehicles = await _context.ParkedVehicle
+                model = await _context.ParkedVehicle
                     .Select(e => new ParkedVehicleIndexViewModel
                     {
                         Id = e.Id,
@@ -49,13 +56,21 @@ namespace Garage_2._0.Controllers
                     .SetAbsoluteExpiration(TimeSpan.FromHours(1));
 
                 // Save data in cache
-                _cache.Set(cacheKey, parkedVehicles, cacheEntryOptions);
-
-                // Assign the freshly queried data to model
-                model = parkedVehicles;
+                _cache.Set(cacheKey, model, cacheEntryOptions);
             }
 
-            // Ensure model is not null before passing to the view
+            // Apply sorting
+            model = sortOrder switch
+            {
+                "vehicleType" => model.OrderBy(s => s.VehicleType).ToList(),
+                "vehicleType_desc" => model.OrderByDescending(s => s.VehicleType).ToList(),
+                "registrationNumber" => model.OrderBy(s => s.RegistrationNumber).ToList(),
+                "registrationNumber_desc" => model.OrderByDescending(s => s.RegistrationNumber).ToList(),
+                "arrivalTime" => model.OrderBy(s => s.ArrivalTime).ToList(),
+                "arrivalTime_desc" => model.OrderByDescending(s => s.ArrivalTime).ToList(),
+                _ => model.OrderBy(s => s.VehicleType).ToList(),
+            };
+
             return View("Index", model ?? new List<ParkedVehicleIndexViewModel>());
         }
 

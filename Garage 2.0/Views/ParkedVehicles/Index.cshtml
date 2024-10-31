@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Garage_2._0.Models.ViewModels.ParkedVehicleIndexViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Garage 2.0";
 }
 
 <h1>Index</h1>
@@ -13,13 +13,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.VehicleType)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["VehicleTypeSortParm"]">
+                    @Html.DisplayNameFor(model => model.VehicleType)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RegistrationNumber)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["RegistrationNumberSortParm"]">
+                    @Html.DisplayNameFor(model => model.RegistrationNumber)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ArrivalTime)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["ArrivalTimeSortParm"]">
+                    @Html.DisplayNameFor(model => model.ArrivalTime)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ParkedTime)
@@ -29,25 +35,25 @@
     </thead>
     <tbody>
     @foreach (var item in Model) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VehicleType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RegistrationNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ArrivalTime)
-                </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ParkedTime)
-                    </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Checkout" asp-route-id="@item.Id">Checkout</a>
-                </td>
-            </tr>
-    }
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegistrationNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ArrivalTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ParkedTime)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Checkout" asp-route-id="@item.Id">Checkout</a>
+            </td>
+        </tr>
+        }
     </tbody>
 </table>
