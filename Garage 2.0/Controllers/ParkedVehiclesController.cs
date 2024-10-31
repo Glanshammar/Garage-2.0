@@ -186,6 +186,8 @@ namespace Garage_2._0.Controllers
             return View(parkedVehicle);
         }
 
+
+
         // GET: ParkedVehicles/Checkout/5
         public async Task<IActionResult> Checkout(int? id)
         {
@@ -238,5 +240,50 @@ namespace Garage_2._0.Controllers
         {
             return _context.ParkedVehicle.Any(e => e.Id == id);
         }
+
+
+        // GET: ParkedVehicles/ShowReceipt/5
+        public async Task<IActionResult> ShowReceipt(int id)
+        {
+            var parkedVehicle = await _context.ParkedVehicle
+                .FirstOrDefaultAsync(v => v.Id == id);
+
+            if (parkedVehicle == null)
+            {
+                return NotFound();
+            }
+
+            var checkoutTime = DateTime.Now;
+            var parkedTime = checkoutTime - parkedVehicle.ArrivalTime;
+            var price = CalculateParkingPrice(parkedTime);
+
+            var receiptViewModel = new ReceiptViewModel
+            {
+                Id = parkedVehicle.Id,
+                VehicleType = parkedVehicle.VehicleType,
+                RegistrationNumber = parkedVehicle.RegistrationNumber,
+                ArrivalTime = parkedVehicle.ArrivalTime,
+                ParkedTime = parkedTime,
+                CheckoutTime = checkoutTime,
+                Price = price,
+                IsConfirmation = false // This is a final receipt, not a confirmation
+            };
+
+            return View("Receipt", receiptViewModel);
+        }
+
+
+
+
+        // Helper method to calculate the price based on parked time
+        private decimal CalculateParkingPrice(TimeSpan parkedTime)
+        {
+            decimal hourlyRate = 50m; //  hourly rate
+            return (decimal)parkedTime.TotalHours * hourlyRate;
+        }
+
+
     }
+
+
 }

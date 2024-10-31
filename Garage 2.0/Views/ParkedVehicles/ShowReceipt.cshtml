@@ -1,0 +1,40 @@
+﻿@model Garage_2._0.Models.ViewModels.ReceiptViewModel
+
+@{
+    ViewData["Title"] = "Receipt";
+}
+
+<h1>Parking Receipt</h1>
+
+<div>
+    <h4>Vehicle Information</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.VehicleType)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(m => m.VehicleType)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.RegistrationNumber)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(m => m.RegistrationNumber)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.ArrivalTime)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(m => m.ArrivalTime)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.CheckoutTime)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(m => m.CheckoutTime)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.ParkedTime)</dt>
+        <dd class="col-sm-9">
+            @Model.ParkedTime.Hours hours and @Model.ParkedTime.Minutes minutes
+        </dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Price)</dt>
+        <dd class="col-sm-9">@Model.Price.ToString("C")</dd>
+    </dl>
+
+    <div>
+        <button class="btn btn-primary" onclick="window.print()">Print Receipt</button> |
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+
+
