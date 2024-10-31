@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Garage_2._0.Models.ParkedVehicle>?
+
+@{
+    ViewData["Title"] = "Search";
+    bool emptyModel = Model is null;
+}
+
+
+@if (emptyModel)
+{
+
+    <h1 class="mb-3">Find vehicle</h1>
+    <div class="mb-3 text-muted mt-4">
+        <h5>Enter registration number to search for your vehicle</h5>
+    </div>
+}
+else
+{
+    <div class="mt-4">
+        <h5>Find vehicle</h5>
+    </div>
+}
+
+<form asp-action="Filter" method="get">
+<div class="input-group ">
+    <input type="text" class="form-control" name="regnumber" placeholder="Registration number" />
+    <div class="input-group-append">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</div>
+    </form>
+
+@if (!emptyModel)
+{
+    <div class="border-bottom mt-5 mb-1">
+        <h5>Search Results:</h5>
+    </div>
+    if (!Model.Any())
+    {
+        <div class="my-5 d-flex flex-column align-items-center text-muted">
+            <h2>Sorry!</h2>
+            <h5>No vehicles matching search criteria could be found.</h5>
+        </div>
+    }
+    else
+    {
+        <partial name="_searchResults" model="@Model" />
+    }
+}
