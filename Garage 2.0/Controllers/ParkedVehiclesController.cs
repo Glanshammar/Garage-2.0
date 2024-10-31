@@ -24,15 +24,16 @@ namespace Garage_2._0.Controllers
 
         // GET: ParkedVehicles
         
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, VehicleType? sortBy, string sortOrder)
         {
             const string cacheKey = "ParkedVehiclesIndex";
-    
+
             // Attempt to get the cached value
-            if (!_cache.TryGetValue(cacheKey, out List<ParkedVehicleIndexViewModel> model))
+            List<ParkedVehicleIndexViewModel>? vehicles;
+            if (!_cache.TryGetValue(cacheKey, out vehicles))
             {
                 // Cache miss, so we need to query the database
-                var parkedVehicles = await _context.ParkedVehicle
+                vehicles = await _context.ParkedVehicle
                     .Select(e => new ParkedVehicleIndexViewModel
                     {
                         Id = e.Id,
@@ -49,14 +50,44 @@ namespace Garage_2._0.Controllers
                     .SetAbsoluteExpiration(TimeSpan.FromHours(1));
 
                 // Save data in cache
-                _cache.Set(cacheKey, parkedVehicles, cacheEntryOptions);
+                _cache.Set(cacheKey, vehicles, cacheEntryOptions);
+            }
+            
+            vehicles ??= new List<ParkedVehicleIndexViewModel>();
 
-                // Assign the freshly queried data to model
-                model = parkedVehicles;
+            // Apply search
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                vehicles = vehicles.Where(v => v.RegistrationNumber.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            // Ensure model is not null before passing to the view
-            return View("Index", model ?? new List<ParkedVehicleIndexViewModel>());
+            // Apply type filter
+            if (sortBy.HasValue)
+            {
+                vehicles = vehicles.Where(v => v.VehicleType == sortBy.Value).ToList();
+            }
+
+            // Apply sorting
+            ViewData["TypeSortParm"] = string.IsNullOrEmpty(sortOrder) ? "type_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+            vehicles = sortOrder switch
+            {
+                "type_desc" => vehicles.OrderByDescending(v => v.VehicleType).ToList(),
+                "Date" => vehicles.OrderBy(v => v.ArrivalTime).ToList(),
+                "date_desc" => vehicles.OrderByDescending(v => v.ArrivalTime).ToList(),
+                _ => vehicles.OrderBy(v => v.VehicleType).ToList(),
+            };
+
+            // Create the view model
+            var viewModel = new VehicleSearchViewModel
+            {
+                SearchString = searchString,
+                SortBy = sortBy,
+                Vehicles = vehicles
+            };
+
+            return View(viewModel);
         }
 
         // GET: ParkedVehicles/Details/5
