@@ -59,22 +59,6 @@ namespace Garage_2._0.Controllers
             return View("Index", model ?? new List<ParkedVehicleIndexViewModel>());
         }
 
-        public async Task<IActionResult> Search()
-        {
-            
-            return View("Search");
-        }
-
-        public async Task<IActionResult> Filter(string regnumber)
-        {
-            var model = string.IsNullOrWhiteSpace(regnumber) ?
-                _context.ParkedVehicle :
-                _context.ParkedVehicle.Where(v => v.RegistrationNumber.Contains(regnumber));
-
-
-            return View("Search", await model.ToListAsync());
-        }
-
         // GET: ParkedVehicles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -117,6 +101,9 @@ namespace Garage_2._0.Controllers
 
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
+
+                // Set success message in TempData
+                TempData["SuccessMessage"] = "Vehicle parked successfully!";
 
                 // Invalidate the cache
                 _cache.Remove("ParkedVehiclesIndex");
@@ -182,6 +169,9 @@ namespace Garage_2._0.Controllers
                     _context.Update(existingVehicle);
                     await _context.SaveChangesAsync();
 
+                    // Set success message in TempData
+                    TempData["SuccessMessage"] = "Vehicle details updated successfully!";
+
                     // Invalidate the cache
                     _cache.Remove("ParkedVehiclesIndex");
                 }
@@ -202,8 +192,8 @@ namespace Garage_2._0.Controllers
             return View(parkedVehicle);
         }
 
-        // GET: ParkedVehicles/Checkout/5
-        public async Task<IActionResult> Checkout(int? id)
+        // GET: ParkedVehicles/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -217,36 +207,21 @@ namespace Garage_2._0.Controllers
                 return NotFound();
             }
 
-            var checkoutViewModel = new CheckoutViewModel
-            {
-                Id = parkedVehicle.Id,
-                VehicleType = parkedVehicle.VehicleType,
-                RegistrationNumber = parkedVehicle.RegistrationNumber,
-                ArrivalTime = parkedVehicle.ArrivalTime,
-                ParkedTime = DateTime.Now.Subtract(parkedVehicle.ArrivalTime),
-                CheckoutTime = DateTime.Now
-            };
-
-            return View(checkoutViewModel);
+            return View(parkedVehicle);
         }
 
-        // POST: ParkedVehicles/Checkout/5
-        [HttpPost, ActionName("Checkout")]
+        // POST: ParkedVehicles/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CheckoutConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
-            if (parkedVehicle == null)
+            if (parkedVehicle != null)
             {
-                return NotFound();
+                _context.ParkedVehicle.Remove(parkedVehicle);
             }
 
-            _context.ParkedVehicle.Remove(parkedVehicle);
             await _context.SaveChangesAsync();
-
-            // Invalidate the cache
-            _cache.Remove("ParkedVehiclesIndex");
-
             return RedirectToAction(nameof(Index));
         }
 
