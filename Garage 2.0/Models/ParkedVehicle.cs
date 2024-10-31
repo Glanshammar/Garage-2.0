@@ -31,7 +31,7 @@ namespace Garage_2._0.Models
 
         [Required(ErrorMessage = "Number of wheels is required.")]
         [Display(Name = "Number of Wheels")]
-        [Range(1, 18, ErrorMessage = "Number of wheels must be between 1 and 18.")]
+        [ValidateWheels]
         public int NumberOfWheels { get; set; }
 
         [Required(ErrorMessage = "Arrival time is required.")]
