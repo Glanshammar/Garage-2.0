@@ -59,6 +59,22 @@ namespace Garage_2._0.Controllers
             return View("Index", model ?? new List<ParkedVehicleIndexViewModel>());
         }
 
+        public async Task<IActionResult> Search()
+        {
+            
+            return View("Search");
+        }
+
+        public async Task<IActionResult> Filter(string regnumber)
+        {
+            var model = string.IsNullOrWhiteSpace(regnumber) ?
+                _context.ParkedVehicle :
+                _context.ParkedVehicle.Where(v => v.RegistrationNumber.Contains(regnumber));
+
+
+            return View("Search", await model.ToListAsync());
+        }
+
         // GET: ParkedVehicles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
