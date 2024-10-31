@@ -4,9 +4,9 @@ Extrauppgifter
 * [ ] Sortering av fordon efter egenskaper
 
 ## Andreas
-* [ ] Parkering
+* [X] Parkering
   * [X] Parkera fordon
-  * [ ] Hämta ut fordon
+  * [X] Hämta ut fordon (checkout)
 
 
 ## Karin
