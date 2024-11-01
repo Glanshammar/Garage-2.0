@@ -227,13 +227,30 @@ namespace Garage_2._0.Controllers
                 return NotFound();
             }
 
+            var checkoutTime = DateTime.Now;
+            var parkedTime = checkoutTime - parkedVehicle.ArrivalTime;
+            var price = CalculateParkingPrice(parkedTime);
+
+            // Store details in TempData
+            TempData["VehicleType"] = parkedVehicle.VehicleType.ToString();
+            TempData["RegistrationNumber"] = parkedVehicle.RegistrationNumber;
+            TempData["ArrivalTime"] = parkedVehicle.ArrivalTime;
+            TempData["CheckoutTime"] = checkoutTime;
+            TempData["ParkedTime"] = parkedTime.ToString();
+           TempData["Price"] = price.ToString();
+
+
             _context.ParkedVehicle.Remove(parkedVehicle);
             await _context.SaveChangesAsync();
 
             // Invalidate the cache
             _cache.Remove("ParkedVehiclesIndex");
 
-            return RedirectToAction(nameof(Index));
+          // return RedirectToAction(nameof(Index));
+
+           // Redirect to ShowReceipt with the vehicle's id to display the final receipt
+            return RedirectToAction("ShowReceipt", new { id = id });
+
         }
 
         private bool ParkedVehicleExists(int id)
@@ -245,31 +262,24 @@ namespace Garage_2._0.Controllers
         // GET: ParkedVehicles/ShowReceipt/5
         public async Task<IActionResult> ShowReceipt(int id)
         {
-            var parkedVehicle = await _context.ParkedVehicle
-                .FirstOrDefaultAsync(v => v.Id == id);
-
-            if (parkedVehicle == null)
+            var parkedVehicle = await _context.ParkedVehicle.FirstOrDefaultAsync(v => v.Id == id);
+            if (TempData["RegistrationNumber"] == null)
             {
                 return NotFound();
             }
 
-            var checkoutTime = DateTime.Now;
-            var parkedTime = checkoutTime - parkedVehicle.ArrivalTime;
-            var price = CalculateParkingPrice(parkedTime);
-
             var receiptViewModel = new ReceiptViewModel
             {
-                Id = parkedVehicle.Id,
-                VehicleType = parkedVehicle.VehicleType,
-                RegistrationNumber = parkedVehicle.RegistrationNumber,
-                ArrivalTime = parkedVehicle.ArrivalTime,
-                ParkedTime = parkedTime,
-                CheckoutTime = checkoutTime,
-                Price = price,
-                IsConfirmation = false // This is a final receipt, not a confirmation
+                VehicleType = Enum.Parse<VehicleType>(TempData["VehicleType"].ToString()),
+                RegistrationNumber = TempData["RegistrationNumber"].ToString(),
+                ArrivalTime = DateTime.Parse(TempData["ArrivalTime"].ToString()),
+                CheckoutTime = DateTime.Parse(TempData["CheckoutTime"].ToString()),
+                ParkedTime = TimeSpan.Parse(TempData["ParkedTime"].ToString()),
+                Price = decimal.Parse(TempData["Price"].ToString()),
+                IsConfirmation = false
             };
 
-            return View("Receipt", receiptViewModel);
+            return View("ShowReceipt", receiptViewModel);
         }
 
 
