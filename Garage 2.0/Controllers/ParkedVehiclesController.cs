@@ -80,14 +80,36 @@ namespace Garage_2._0.Controllers
             return View("Search");
         }
 
-        public async Task<IActionResult> Filter(string regnumber)
+        public async Task<IActionResult> Filter(string searchTerm)
         {
-            var model = string.IsNullOrWhiteSpace(regnumber) ?
-                _context.ParkedVehicle :
-                _context.ParkedVehicle.Where(v => v.RegistrationNumber.Contains(regnumber));
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return View("Search", await _context.ParkedVehicle.ToListAsync());
+            }
 
+            var loweredSearchTerm = searchTerm.ToLower();
 
-            return View("Search", await model.ToListAsync());
+            var query = _context.ParkedVehicle.Where(v =>
+                v.RegistrationNumber.ToLower().Contains(loweredSearchTerm) ||
+                v.Color.ToLower().Contains(loweredSearchTerm) ||
+                v.Brand.ToLower().Contains(loweredSearchTerm) ||
+                v.Model.ToLower().Contains(loweredSearchTerm)
+            );
+
+            var results = await query.ToListAsync();
+
+            // Handle VehicleType and NumberOfWheels separately
+            if (Enum.TryParse<VehicleType>(searchTerm, true, out var vehicleType))
+            {
+                results = results.Where(v => v.VehicleType == vehicleType).ToList();
+            }
+
+            if (int.TryParse(searchTerm, out var wheels))
+            {
+                results = results.Where(v => v.NumberOfWheels == wheels).ToList();
+            }
+
+            return View("Search", results);
         }
 
         // GET: ParkedVehicles/Details/5
