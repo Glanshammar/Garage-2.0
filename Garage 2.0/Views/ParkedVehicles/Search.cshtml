@@ -11,7 +11,7 @@
 
     <h1 class="mb-3">Find vehicle</h1>
     <div class="mb-3 text-muted mt-4">
-        <h5>Enter registration number to search for your vehicle</h5>
+        <h5>Enter registration number or property to search for your vehicle</h5>
     </div>
 }
 else
@@ -22,13 +22,13 @@ else
 }
 
 <form asp-action="Filter" method="get">
-<div class="input-group ">
-    <input type="text" class="form-control" name="regnumber" placeholder="Registration number" />
-    <div class="input-group-append">
-        <button type="submit" class="btn btn-primary">Search</button>
+    <div class="input-group">
+        <input type="text" class="form-control" name="searchTerm" placeholder="Search by any property" />
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
     </div>
-</div>
-    </form>
+</form>
 
 @if (!emptyModel)
 {

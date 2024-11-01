@@ -9,8 +9,12 @@ namespace Garage_2._0.Models.ViewModels
 
         [Display(Name = "Vehicle Type")]
         public VehicleType VehicleType { get; set; }
+        
         [Display(Name = "Registration Number")]
         public string RegistrationNumber { get; set; }
+        
+        [Display(Name = "Number of Wheels")]
+        public int NumberOfWheels { get; set; }
 
         [Display(Name = "Arrival Time")]
         [DataType(DataType.DateTime)]

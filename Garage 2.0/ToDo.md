@@ -1,7 +1,7 @@
 # ToDo List
 Extrauppgifter
-* [ ] Sökning av fordon efter egenskaper (utöver reg nummer)
-* [ ] Sortering av fordon efter egenskaper
+* [X] Sökning av fordon efter egenskaper (utöver reg nummer)
+* [X] Sortering av fordon efter egenskaper
 
 ## Andreas
 * [X] Parkering
@@ -10,8 +10,8 @@ Extrauppgifter
 
 
 ## Karin
-* [ ] Sökning av fordon efter reg nummer
-* [ ] Formatera TimeSpan
+* [X] Sökning av fordon efter reg nummer
+* [X] Formatera TimeSpan
 
 ## Hanieh
 * [ ] Feedback
