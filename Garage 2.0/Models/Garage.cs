@@ -13,6 +13,7 @@
             numberOfParkingSpots = spots;
             vehiclesPerRow = columnCount;
             numberOfRows = Convert.ToInt32(spots/columnCount);
+            ParkingSpots = new ParkingSpot[numberOfRows, vehiclesPerRow];
         }
 
         public void BuildGarage()
@@ -28,7 +29,7 @@
             {
                 for (int x = 0; x < vehiclesPerRow; x++)
                 {
-                    ParkingSpots[x, y] = new ParkingSpot(y, x, x+y);
+                    ParkingSpots[x, y] = new ParkingSpot(y, x);
                 }
 
             }
