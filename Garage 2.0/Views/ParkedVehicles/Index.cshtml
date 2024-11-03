@@ -9,6 +9,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<div id="vehicleList" data-current-sort="@ViewData["CurrentSort"]">
 <table class="table">
     <thead>
         <tr>
@@ -35,7 +36,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.ParkedTime)
             </th>
-            <th></th>
+                <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -59,7 +60,8 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Checkout" asp-route-id="@item.Id">Checkout</a>
+                        <a asp-action="Checkout" asp-route-id="@item.Id" class="btn btn-danger btn-sm delete-vehicle"
+                           data-registration="@item.RegistrationNumber">Checkout</a>
             </td>
         </tr>
         }

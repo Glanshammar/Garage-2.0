@@ -15,12 +15,12 @@ Extrauppgifter
 
 ## Hanieh
 * [ ] Feedback
-  * [** ] Framgångsmeddelanden vid parkering och redigering
-  * [** ] Felmeddelanden vid valideringsfel
-  * [** ] Visuella indikatorer (t.ex. toast-notifikationer)
-  * [ ] Omdirigeringar med statusmeddelanden
+  * [**] Framgångsmeddelanden vid parkering och redigering
+  * [**] Felmeddelanden vid valideringsfel
+  * [**] Visuella indikatorer (t.ex. toast-notifikationer)
+  * [**] Omdirigeringar med statusmeddelanden
   * [ ] Realtidsuppdateringar av fordonslistan
-  * [ ] Bekräftelsedialoger för kritiska åtgärder
+  * [**] Bekräftelsedialoger för kritiska åtgärder
 
 ## Sabah
   * [ ] Vid uthämtning av fordon ska kvitto erbjudas
