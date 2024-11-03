@@ -121,6 +121,7 @@ namespace Garage_2._0.Controllers
         {
             if (id == null)
             {
+                TempData["ErrorMessage"] = "Invalid vehicle ID provided.";
                 return NotFound();
             }
 
@@ -128,6 +129,7 @@ namespace Garage_2._0.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (parkedVehicle == null)
             {
+                TempData["ErrorMessage"] = "Vehicle not found.";
                 return NotFound();
             }
 
@@ -148,9 +150,11 @@ namespace Garage_2._0.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 // Check if the registration number already exists
                 if (await _context.ParkedVehicle.AnyAsync(v => v.RegistrationNumber == parkedVehicle.RegistrationNumber))
                 {
+                    TempData["ErrorMessage"] = "This registration number is already in use.";
                     ModelState.AddModelError("RegistrationNumber", "This registration number is already in use.");
                     ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
                     return View(parkedVehicle);
@@ -158,6 +162,9 @@ namespace Garage_2._0.Controllers
 
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
+
+                // Set success message in TempData
+                TempData["SuccessMessage"] = "Vehicle parked successfully!";
 
                 // Invalidate the cache
                 _cache.Remove("ParkedVehiclesIndex");
@@ -173,12 +180,14 @@ namespace Garage_2._0.Controllers
         {
             if (id == null)
             {
+                TempData["ErrorMessage"] = "Invalid vehicle ID provided.";
                 return NotFound();
             }
 
             var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
             if (parkedVehicle == null)
             {
+                TempData["ErrorMessage"] = "Vehicle not found.";
                 return NotFound();
             }
             ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
@@ -192,6 +201,7 @@ namespace Garage_2._0.Controllers
         {
             if (id != parkedVehicle.Id)
             {
+                TempData["ErrorMessage"] = "Invalid vehicle ID provided.";
                 return NotFound();
             }
 
@@ -202,12 +212,15 @@ namespace Garage_2._0.Controllers
                     var existingVehicle = await _context.ParkedVehicle.FindAsync(id);
                     if (existingVehicle == null)
                     {
+                        TempData["ErrorMessage"] = "Vehicle not found.";
                         return NotFound();
                     }
 
                     // Check if the registration number already exists (excluding the current vehicle)
                     if (await _context.ParkedVehicle.AnyAsync(v => v.RegistrationNumber == parkedVehicle.RegistrationNumber && v.Id != id))
                     {
+
+                        TempData["ErrorMessage"] = "This registration number is already in use.";
                         ModelState.AddModelError("RegistrationNumber", "This registration number is already in use.");
                         ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
                         return View(parkedVehicle);
@@ -223,6 +236,9 @@ namespace Garage_2._0.Controllers
                     _context.Update(existingVehicle);
                     await _context.SaveChangesAsync();
 
+                    // Set success message in TempData
+                    TempData["SuccessMessage"] = "Vehicle details updated successfully!";
+
                     // Invalidate the cache
                     _cache.Remove("ParkedVehiclesIndex");
                 }
@@ -230,11 +246,13 @@ namespace Garage_2._0.Controllers
                 {
                     if (!ParkedVehicleExists(parkedVehicle.Id))
                     {
+                        TempData["ErrorMessage"] = "Vehicle no longer exists.";
                         return NotFound();
                     }
                     else
                     {
-                        throw;
+                        TempData["ErrorMessage"] = "Error updating vehicle. Please try again.";
+                        //throw;
                     }
                 }
                 return RedirectToAction(nameof(Index));
@@ -243,11 +261,12 @@ namespace Garage_2._0.Controllers
             return View(parkedVehicle);
         }
 
-        // GET: ParkedVehicles/Checkout/5
-        public async Task<IActionResult> Checkout(int? id)
+        // GET: ParkedVehicles/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
+                TempData["ErrorMessage"] = "Invalid vehicle ID provided.";
                 return NotFound();
             }
 
@@ -255,39 +274,33 @@ namespace Garage_2._0.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (parkedVehicle == null)
             {
+                // Set the error message in TempData if the vehicle is not found
+                TempData["ErrorMessage"] = "Vehicle not found.";
                 return NotFound();
             }
 
-            var checkoutViewModel = new CheckoutViewModel
-            {
-                Id = parkedVehicle.Id,
-                VehicleType = parkedVehicle.VehicleType,
-                RegistrationNumber = parkedVehicle.RegistrationNumber,
-                ArrivalTime = parkedVehicle.ArrivalTime,
-                ParkedTime = DateTime.Now.Subtract(parkedVehicle.ArrivalTime),
-                CheckoutTime = DateTime.Now
-            };
 
-            return View(checkoutViewModel);
+
+            return View(parkedVehicle);
         }
 
-        // POST: ParkedVehicles/Checkout/5
-        [HttpPost, ActionName("Checkout")]
+        // POST: ParkedVehicles/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CheckoutConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
-            if (parkedVehicle == null)
+            if (parkedVehicle != null)
             {
-                return NotFound();
+                
+                _context.ParkedVehicle.Remove(parkedVehicle);
             }
 
-            _context.ParkedVehicle.Remove(parkedVehicle);
+
             await _context.SaveChangesAsync();
 
-            // Invalidate the cache
-            _cache.Remove("ParkedVehiclesIndex");
-
+            
+            TempData["SuccessMessage"] = "Vehicle deleted successfully!";
             return RedirectToAction(nameof(Index));
         }
 
