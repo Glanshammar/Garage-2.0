@@ -20,11 +20,13 @@ namespace Garage_2._0.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+          
+
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ParkedVehicle>().HasData(
-                new ParkedVehicle { Id=1,VehicleType=VehicleType.Car,RegistrationNumber="ABC123",Color="Blue",Brand="Volkswagen",Model="Jetta",NumberOfWheels=4, ParkingSpot = new ParkingSpot(0, 3, 1, true) },
-                new ParkedVehicle{ Id = 2 ,VehicleType = VehicleType.Car, RegistrationNumber = "DEF123",Color = "Blue",Brand = "Volkswagen",Model = "Taos",NumberOfWheels = 4, ParkingSpot = new ParkingSpot(0, 3, 2, true) },
-                new ParkedVehicle { Id = 3, VehicleType = VehicleType.Motorcycle, RegistrationNumber = "CTF345", Color = "Black", Brand = "Something", Model = "OrOther", NumberOfWheels = 2, ParkingSpot = new ParkingSpot(0,3,3, true) }
+                new ParkedVehicle { Id=1,VehicleType=VehicleType.Car,RegistrationNumber="ABC123",Color="Blue",Brand="Volkswagen",Model="Jetta",NumberOfWheels=4, ParkingSpot = 0, ParkedColumn=0, ParkedRow=0},
+                new ParkedVehicle{ Id = 2 ,VehicleType = VehicleType.Car, RegistrationNumber = "DEF123",Color = "Blue",Brand = "Volkswagen",Model = "Taos",NumberOfWheels = 4, ParkingSpot = 1, ParkedColumn = 0, ParkedRow = 0 },
+                new ParkedVehicle { Id = 3, VehicleType = VehicleType.Motorcycle, RegistrationNumber = "CTF345", Color = "Black", Brand = "Something", Model = "OrOther", NumberOfWheels = 2, ParkingSpot = 2, ParkedColumn = 2, ParkedRow = 0 }
 
 
                 );

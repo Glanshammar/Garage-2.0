@@ -32,7 +32,7 @@ namespace Garage_2._0.Controllers
         public async Task<IActionResult> Index(string sortOrder)
         {
             //Control that garage has been loaded
-            if (garage.generated == false)
+            if (garage is null)
             {
                  GenerateGarage(garage);
             }
@@ -59,7 +59,7 @@ namespace Garage_2._0.Controllers
                         RegistrationNumber = e.RegistrationNumber,
                         ArrivalTime = e.ArrivalTime,
                         ParkedTime = DateTime.Now.Subtract(e.ArrivalTime),
-                        ParkingSpot = e.ParkingSpot.ParkingSpotId
+                        ParkingSpot = e.ParkingSpot
                     })
                     .ToListAsync();
 
@@ -306,16 +306,8 @@ namespace Garage_2._0.Controllers
 
             foreach (var vehicle in _context.ParkedVehicle)
             {
-                if (vehicle.ParkingSpot is null)
-                {   
-                    //Finds first spot that is not occupied
-                    ParkingSpot AvailableParkingSpot = garage.ParkingSpots.FirstOrDefault(p => p.occupied = false);
-
-                    AvailableParkingSpot.occupied = true;
-                    //Makes matching spot in garage occupied
-                    garage.ParkingSpots[AvailableParkingSpot.ParkingSpotId].occupied = true;
-
-                }
+                
+                garage.ParkingSpots[vehicle.ParkingSpot].occupied = true;
             }
             
             return garage;
