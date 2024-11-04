@@ -39,6 +39,8 @@ namespace Garage_2._0.Models
         [DataType(DataType.DateTime)]
         public DateTime ArrivalTime { get; private set; }
 
+        public int ParkingSpot { get; set; }
+
         public ParkedVehicle()
         {
             ArrivalTime = DateTime.Now;
