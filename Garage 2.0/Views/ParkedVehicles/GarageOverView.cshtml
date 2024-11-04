@@ -1,0 +1,29 @@
+﻿@model ParkingSpotViewModel
+
+@{
+    ViewData["Title"] = "GarageOverview";
+    Garage garage = Model.garage;
+}
+
+<h1>Garage overview</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table>
+    <tbody>
+        @for (int y = 0; y < garage.numberOfRows; y++)
+        {
+            <tr class="d-flex bg-alert justify-content-evenly">
+                @for (int x = 0; x < garage.vehiclesPerRow; x++)
+                {
+                    <td>
+                        <div class="parkingSpot bg-success mx-2 " style="min-width:100px; height:120px;">
+                            @Html.DisplayFor(modelItem => garage.ParkingSpots[y, x].Id)
+                        </div>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
