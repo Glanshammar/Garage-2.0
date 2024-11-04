@@ -48,7 +48,8 @@ namespace Garage_2._0.Controllers
                         RegistrationNumber = e.RegistrationNumber,
                         ArrivalTime = e.ArrivalTime,
                         ParkedTime = DateTime.Now.Subtract(e.ArrivalTime),
-                        NumberOfWheels = e.NumberOfWheels
+                        NumberOfWheels = e.NumberOfWheels,
+                        ParkedCost = CalculateParkingPrice(DateTime.Now.Subtract(e.ArrivalTime))
                     })
                     .ToListAsync();
 
@@ -294,7 +295,7 @@ namespace Garage_2._0.Controllers
             TempData["ArrivalTime"] = parkedVehicle.ArrivalTime;
             TempData["CheckoutTime"] = checkoutTime;
             TempData["ParkedTime"] = parkedTime.ToString();
-           TempData["Price"] = price.ToString();
+            TempData["Price"] = price.ToString();
 
 
             _context.ParkedVehicle.Remove(parkedVehicle);
@@ -343,14 +344,10 @@ namespace Garage_2._0.Controllers
 
 
         // Helper method to calculate the price based on parked time
-        private decimal CalculateParkingPrice(TimeSpan parkedTime)
+        private static decimal CalculateParkingPrice(TimeSpan parkedTime)
         {
             decimal hourlyRate = 50m; //  hourly rate
             return (decimal)parkedTime.TotalHours * hourlyRate;
         }
-
-
     }
-
-
 }
