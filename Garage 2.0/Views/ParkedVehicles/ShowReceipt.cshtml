@@ -4,37 +4,60 @@
     ViewData["Title"] = "ShowReceipt";
 }
 
-<h1>Parking Receipt</h1>
+<div class="container mt-5">
+    <h1 class="text-center">@ViewData["Title"]</h1>
 
-<div>
-    <h4>Vehicle Information</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.VehicleType)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(m => m.VehicleType)</dd>
+    <div class="card mt-4 shadow p-3 mb-5 bg-body rounded">
+        <div class="card-body">
+            <h4 class="card-title text-muted mb-4">Vehicle Information</h4>
+            <dl class="row">
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(m => m.VehicleType)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(m => m.VehicleType)
+                </dd>
 
-        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.RegistrationNumber)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(m => m.RegistrationNumber)</dd>
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(m => m.RegistrationNumber)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(m => m.RegistrationNumber)
+                </dd>
 
-        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.ArrivalTime)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(m => m.ArrivalTime)</dd>
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(m => m.ArrivalTime)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(m => m.ArrivalTime)
+                </dd>
 
-        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.CheckoutTime)</dt>
-        <dd class="col-sm-9">@Html.DisplayFor(m => m.CheckoutTime)</dd>
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(m => m.CheckoutTime)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(m => m.CheckoutTime)
+                </dd>
 
-        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.ParkedTime)</dt>
-        <dd class="col-sm-9">
-            @Model.ParkedTime.Hours hours and @Model.ParkedTime.Minutes minutes
-        </dd>
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(m => m.ParkedTime)
+                </dt>
+                <dd class="col-sm-8">
+                    @Model.ParkedTime.Hours hours and @Model.ParkedTime.Minutes minutes
+                </dd>
 
-        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Price)</dt>
-        <dd class="col-sm-9">@Model.Price.ToString("C")</dd>
-    </dl>
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(m => m.Price)
+                </dt>
+                <dd class="col-sm-8">
+                    @Model.Price.ToString("C")
+                </dd>
+            </dl>
 
-    <div>
-        <button class="btn btn-primary" onclick="window.print()">Print Receipt</button> |
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn btn-primary" onclick="window.print()">Print Receipt</button>
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
     </div>
 </div>
-
-
