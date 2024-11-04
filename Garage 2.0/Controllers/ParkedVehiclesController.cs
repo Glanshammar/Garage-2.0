@@ -126,7 +126,7 @@ namespace Garage_2._0.Controllers
         public IActionResult Create()
         {
             //Check if there are any parking spaces available
-            if (_context.ParkedVehicle.Count() > garage.numberOfParkingSpots)
+            if (_context.ParkedVehicle.Count() >= garage.numberOfParkingSpots)
             {
                 ModelState.AddModelError("GarageFull", "The garage is full.");
                 return RedirectToAction(nameof(Index));
