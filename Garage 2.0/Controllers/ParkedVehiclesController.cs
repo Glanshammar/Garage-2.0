@@ -155,8 +155,11 @@ namespace Garage_2._0.Controllers
 
                 // Assign parking spot
 
-                //ToDo: make this not awful
-
+                ParkingSpot assignedParkingSpot = garage.ParkingSpots.FirstOrDefault(p => p.occupied == false);
+                parkedVehicle.ParkingSpot = assignedParkingSpot.ParkingSpotId;
+                parkedVehicle.ParkedRow = assignedParkingSpot.row;
+                parkedVehicle.ParkedColumn = assignedParkingSpot.column;
+                garage.ParkingSpots[assignedParkingSpot.ParkingSpotId].occupied = true;
 
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
