@@ -16,10 +16,10 @@ namespace Garage_2._0.Controllers
         private readonly Garage_2_0Context _context;
         private readonly IMemoryCache _cache;
 
-        private readonly int numberOfParkingSpots = 5;
+        private readonly int numberOfParkingSpots = 10;
         private readonly int vehiclesPerRow = 5;
 
-        private static Garage garage = new Garage(5, 5);        
+        private static Garage garage = new Garage(10, 5);        
         
         public ParkedVehiclesController(Garage_2_0Context context, IMemoryCache cache)
         {
@@ -319,6 +319,15 @@ namespace Garage_2._0.Controllers
             }
             garage.generated = true;
             return garage;
+        }
+
+        public async Task<IActionResult> GarageOverView()
+        {
+
+            var model = new ParkingSpotViewModel(garage, await _context.ParkedVehicle.ToListAsync());
+                
+            
+            return View(model);
         }
     }
 }

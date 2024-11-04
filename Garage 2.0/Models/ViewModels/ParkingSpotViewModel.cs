@@ -2,15 +2,15 @@
 {
     public class ParkingSpotViewModel
     {
-        public IEnumerable<ParkingSpot> parkingSpotModel { get; set; }
+        public IEnumerable<ParkedVehicle> parkedVehicleModel { get; set; }
         public Garage garage { get; set; }
 
 
         //Bestämmer hur breda 
-        public ParkingSpotViewModel(Garage garage, IEnumerable<ParkingSpot> parkingSpotModel)
+        public ParkingSpotViewModel(Garage garageModel, IEnumerable<ParkedVehicle> parkedVehicleModel)
         {
-            this.garage = garage;
-                this.parkingSpotModel = parkingSpotModel;
+            this.garage = garageModel;
+                this.parkedVehicleModel = parkedVehicleModel;
         }
 
     }
