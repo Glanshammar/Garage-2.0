@@ -288,6 +288,7 @@ namespace Garage_2._0.Controllers
                 return NotFound();
             }
 
+            garage.ParkingSpots[parkedVehicle.ParkingSpot].occupied = false;
             _context.ParkedVehicle.Remove(parkedVehicle);
             await _context.SaveChangesAsync();
 
