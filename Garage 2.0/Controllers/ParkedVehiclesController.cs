@@ -46,7 +46,8 @@ namespace Garage_2._0.Controllers
                         VehicleType = e.VehicleType,
                         RegistrationNumber = e.RegistrationNumber,
                         ArrivalTime = e.ArrivalTime,
-                        ParkedTime = DateTime.Now.Subtract(e.ArrivalTime)
+                        ParkedTime = DateTime.Now.Subtract(e.ArrivalTime),
+                        ParkingSpot = e.ParkingSpot.ParkingSpotId
                     })
                     .ToListAsync();
 
