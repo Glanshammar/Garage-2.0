@@ -75,6 +75,19 @@ namespace Garage_2._0.Controllers
                 "wheels_desc" => model.OrderByDescending(s => s.NumberOfWheels).ToList(),
                 _ => model.OrderBy(s => s.VehicleType).ToList(),
             };
+            
+            // Calculate statistics
+            var statistics = new ParkingStatisticsViewModel
+            {
+                TotalVehicles = model.Count,
+                TotalWheels = model.Sum(v => v.NumberOfWheels),
+                TotalRevenue = model.Sum(v => v.ParkedCost),
+                VehicleTypeCounts = model.GroupBy(v => v.VehicleType)
+                    .ToDictionary(g => g.Key, g => g.Count())
+            };
+            
+            // Pass both model and statistics to the view using ViewData
+            ViewData["Statistics"] = statistics;
 
             return View("Index", model ?? new List<ParkedVehicleIndexViewModel>());
         }
