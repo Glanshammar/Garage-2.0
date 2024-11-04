@@ -38,6 +38,9 @@
                 <th class="text-white">
                     @Html.DisplayNameFor(model => model.ParkedTime)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ParkedCost)
+                </th>
                 <th class="text-center text-white">Actions</th>
             </tr>
         </thead>
@@ -59,6 +62,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ParkedTime)
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParkedCost)
+                </td>
                 <td class="text-center">
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning mx-1">Edit</a>
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info mx-1">Details</a>
@@ -70,91 +76,46 @@
     </table>
 </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="container mt-5">
+    <h2 class="display-5 text-center mb-4">Parking Statistics</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["VehicleTypeSortParm"]">
-                    @Html.DisplayNameFor(model => model.VehicleType)
-                </a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["RegistrationNumberSortParm"]">
-                    @Html.DisplayNameFor(model => model.RegistrationNumber)
-                </a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["WheelsSortParm"]">
-                    @Html.DisplayNameFor(model => model.NumberOfWheels)
-                </a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["ArrivalTimeSortParm"]">
-                    @Html.DisplayNameFor(model => model.ArrivalTime)
-                </a>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ParkedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ParkedCost)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.VehicleType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegistrationNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfWheels)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArrivalTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ParkedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ParkedCost)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Checkout" asp-route-id="@item.Id">Checkout</a>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
-
-<h2>Parking Statistics</h2>
-
-<div class="row">
-    <div class="col-md-6">
-        <h3>General Statistics</h3>
-        <ul>
-            <li>Total Vehicles: @statistics.TotalVehicles</li>
-            <li>Total Wheels: @statistics.TotalWheels</li>
-            <li>Total Revenue: @statistics.TotalRevenue.ToString("C")</li>
-        </ul>
-    </div>
-    <div class="col-md-6">
-        <h3>Vehicle Type Distribution</h3>
-        <ul>
-            @foreach (var kvp in statistics.VehicleTypeCounts)
-            {
-            <li>@kvp.Key: @kvp.Value</li>
-            }
-        </ul>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">General Statistics</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Total Vehicles
+                        <span class="badge bg-primary rounded-pill">@statistics.TotalVehicles</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Total Wheels
+                        <span class="badge bg-primary rounded-pill">@statistics.TotalWheels</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Total Revenue
+                        <span class="badge bg-success rounded-pill">@statistics.TotalRevenue.ToString("C")</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">Vehicle Type Distribution</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var kvp in statistics.VehicleTypeCounts)
+                    {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        @kvp.Key
+                        <span class="badge bg-primary rounded-pill">@kvp.Value</span>
+                    </li>
+                    }
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
