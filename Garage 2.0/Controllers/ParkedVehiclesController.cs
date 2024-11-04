@@ -19,7 +19,7 @@ namespace Garage_2._0.Controllers
         private readonly int numberOfParkingSpots = 5;
         private readonly int vehiclesPerRow = 5;
 
-        private Garage garage;
+        private static Garage garage = new Garage(5, 5);        
         
         public ParkedVehiclesController(Garage_2_0Context context, IMemoryCache cache)
         {
@@ -32,9 +32,10 @@ namespace Garage_2._0.Controllers
         public async Task<IActionResult> Index(string sortOrder)
         {
             //Control that garage has been loaded
-            if (garage is null)
+                      if (garage.generated == false)
             {
-                 GenerateGarage(garage);
+                GenerateGarage();
+
             }
 
 
@@ -301,10 +302,10 @@ namespace Garage_2._0.Controllers
             return _context.ParkedVehicle.Any(e => e.Id == id);
         }
         
-        public Garage GenerateGarage(Garage garageReference)
+        public Garage GenerateGarage()
         {
             //Fetches parkingspots and columns from reference ints at top of controller for easier editing
-            Garage garage = new(numberOfParkingSpots, vehiclesPerRow);
+       
             garage.BuildGarage();
 
             foreach (var vehicle in _context.ParkedVehicle)
@@ -312,7 +313,7 @@ namespace Garage_2._0.Controllers
                 
                 garage.ParkingSpots[vehicle.ParkingSpot].occupied = true;
             }
-            
+            garage.generated = true;
             return garage;
         }
     }
