@@ -8,20 +8,17 @@
         public int vehiclesPerRow { get; set; } //number of columns
         public int numberOfRows { get; set; } //number of rows
 
-        public Garage(int spots, int columnCount) 
+        public Garage(int spots = 15, int columnCount = 5) 
         {
             numberOfParkingSpots = spots;
             vehiclesPerRow = columnCount;
             numberOfRows = Convert.ToInt32(spots/columnCount);
-            ParkingSpots = new ParkingSpot[numberOfRows, vehiclesPerRow];
+           // ParkingSpots = new ParkingSpot[numberOfRows, vehiclesPerRow];
         }
 
         public void BuildGarage()
         {
-            int finalRowSpots;
 
-            numberOfRows = Convert.ToInt32(numberOfParkingSpots / vehiclesPerRow);
-            finalRowSpots = numberOfParkingSpots % vehiclesPerRow;
 
             ParkingSpots = new ParkingSpot[vehiclesPerRow, numberOfRows];
 
