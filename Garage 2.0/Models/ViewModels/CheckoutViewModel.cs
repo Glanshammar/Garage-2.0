@@ -7,5 +7,6 @@ public class CheckoutViewModel
     public string RegistrationNumber { get; set; }
     public DateTime ArrivalTime { get; set; }
     public TimeSpan ParkedTime { get; set; }
+    public int ParkingSpot { get; set; }
     public DateTime CheckoutTime { get; set; }
 }

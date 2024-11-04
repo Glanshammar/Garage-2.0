@@ -274,6 +274,7 @@ namespace Garage_2._0.Controllers
                 RegistrationNumber = parkedVehicle.RegistrationNumber,
                 ArrivalTime = parkedVehicle.ArrivalTime,
                 ParkedTime = DateTime.Now.Subtract(parkedVehicle.ArrivalTime),
+                ParkingSpot = parkedVehicle.ParkingSpot,
                 CheckoutTime = DateTime.Now
             };
 
