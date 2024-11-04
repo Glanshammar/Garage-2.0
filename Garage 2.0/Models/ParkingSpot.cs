@@ -13,11 +13,11 @@
 
         //public ParkedVehicle? parkedVehicle { get; set; } //Är null ifall platsen är ledig
 
-        public ParkingSpot(int row, int column, int id, bool occupied)
+        public ParkingSpot(int row, int column, int ParkingSpotId, bool occupied)
         {
             this.row = row;
             this.column = column;
-            ParkingSpotId = id;
+            this.ParkingSpotId = ParkingSpotId;
             this.occupied = occupied;
 
         }
