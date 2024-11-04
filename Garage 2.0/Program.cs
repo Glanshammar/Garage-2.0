@@ -9,8 +9,7 @@ namespace Garage_2._0
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddDbContext<Garage_2_0ParkingSpotContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Garage_2_0ParkingSpotContext") ?? throw new InvalidOperationException("Connection string 'Garage_2_0ParkingSpotContext' not found.")));
+           
 
             builder.Services.AddDbContext<Garage_2_0Context>( options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Garage_2_0Context") ?? throw new InvalidOperationException("Connection string 'Garage_2_0Context' not found.")));
