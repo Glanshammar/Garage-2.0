@@ -16,6 +16,11 @@ namespace Garage_2._0.Controllers
         private readonly Garage_2_0Context _context;
         private readonly IMemoryCache _cache;
         
+        private readonly int numberOfParkingSpots = 5;
+        private readonly int vehiclesPerRow = 5;
+
+        private Garage garage;
+        
         public ParkedVehiclesController(Garage_2_0Context context, IMemoryCache cache)
         {
             _context = context;
@@ -26,6 +31,13 @@ namespace Garage_2._0.Controllers
         
         public async Task<IActionResult> Index(string sortOrder)
         {
+            //Control that garage has been loaded
+            if (garage.generated == false)
+            {
+                 GenerateGarage(garage);
+            }
+
+
             const string cacheKey = "ParkedVehiclesIndex";
 
             ViewData["VehicleTypeSortParm"] = sortOrder == "vehicleType" ? "vehicleType_desc" : "vehicleType";
@@ -269,6 +281,29 @@ namespace Garage_2._0.Controllers
         private bool ParkedVehicleExists(int id)
         {
             return _context.ParkedVehicle.Any(e => e.Id == id);
+        }
+        
+        public Garage GenerateGarage(Garage garageReference)
+        {
+            //Fetches parkingspots and columns from reference ints at top of controller for easier editing
+            Garage garage = new(numberOfParkingSpots, vehiclesPerRow);
+            garage.BuildGarage();
+
+            foreach (var vehicle in _context.ParkedVehicle)
+            {
+                if (vehicle.ParkingSpot is null)
+                {   
+                    //Finds first spot that is not occupied
+                    ParkingSpot AvailableParkingSpot = garage.ParkingSpots.FirstOrDefault(p => p.occupied = false);
+
+                    AvailableParkingSpot.occupied = true;
+                    //Makes matching spot in garage occupied
+                    garage.ParkingSpots[AvailableParkingSpot.ParkingSpotId].occupied = true;
+
+                }
+            }
+            
+            return garage;
         }
     }
 }
