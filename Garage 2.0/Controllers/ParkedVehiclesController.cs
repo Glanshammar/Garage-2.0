@@ -60,6 +60,13 @@ namespace Garage_2._0.Controllers
 
                 // Save data in cache
                 _cache.Set(cacheKey, model, cacheEntryOptions);
+            } else {
+                // Update ParkedTime and ParkedCost for cached items
+                foreach (var item in model)
+                {
+                    item.ParkedTime = DateTime.Now.Subtract(item.ArrivalTime);
+                    item.ParkedCost = CalculateParkingPrice(item.ParkedTime);
+                }
             }
 
             // Apply sorting
