@@ -15,7 +15,7 @@ namespace Garage_2._0.Controllers
     {
         private readonly Garage_2_0Context _context;
         private readonly IMemoryCache _cache;
-        
+
         private readonly int numberOfParkingSpots = 5;
         private readonly int vehiclesPerRow = 5;
 
@@ -124,6 +124,13 @@ namespace Garage_2._0.Controllers
         // GET: ParkedVehicles/Create
         public IActionResult Create()
         {
+            //Check if there are any parking spaces available
+            if (_context.ParkedVehicle.Count() > garage.numberOfParkingSpots)
+            {
+                ModelState.AddModelError("GarageFull", "The garage is full.");
+                return RedirectToAction(nameof(Index));
+            }
+
             ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
             return View();
         }
@@ -135,13 +142,21 @@ namespace Garage_2._0.Controllers
         {
             if (ModelState.IsValid)
             {
+
+               
+
                 // Check if the registration number already exists
                 if (await _context.ParkedVehicle.AnyAsync(v => v.RegistrationNumber == parkedVehicle.RegistrationNumber))
                 {
-                    ModelState.AddModelError("RegistrationNumber", "This registration number is already in use.");
+                    ModelState.AddModelError("Create", "This registration number is already in use.");
                     ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
                     return View(parkedVehicle);
                 }
+
+                // Assign parking spot
+
+                //ToDo: make this not awful
+
 
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
