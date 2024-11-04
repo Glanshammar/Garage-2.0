@@ -8,4 +8,6 @@ public class CheckoutViewModel
     public DateTime ArrivalTime { get; set; }
     public TimeSpan ParkedTime { get; set; }
     public DateTime CheckoutTime { get; set; }
+
 }
+  

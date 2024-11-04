@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Garage_2._0.Models;
 using System.Drawing.Drawing2D;
 using System.Drawing;
+using Garage_2._0.Models.ViewModels;
 
 namespace Garage_2._0.Data
 {
@@ -29,5 +30,6 @@ namespace Garage_2._0.Data
 
                 );
         }
+        public DbSet<Garage_2._0.Models.ViewModels.CheckoutViewModel> CheckoutViewModel { get; set; } = default!;
     }
 }
