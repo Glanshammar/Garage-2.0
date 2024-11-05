@@ -39,6 +39,7 @@ namespace Garage_2._0.Controllers
             ViewData["RegistrationNumberSortParm"] = sortOrder == "registrationNumber" ? "registrationNumber_desc" : "registrationNumber";
             ViewData["ArrivalTimeSortParm"] = sortOrder == "arrivalTime" ? "arrivalTime_desc" : "arrivalTime";
             ViewData["WheelsSortParm"] = sortOrder == "wheels" ? "wheels_desc" : "wheels";
+            ViewData["ParkingSpotSortParm"] = sortOrder == "parkingSpot" ? "parkingSpot_desc" : "parkingSpot";
             ViewData["CurrentSort"] = sortOrder;
 
             List<ParkedVehicleIndexViewModel> model;
@@ -88,6 +89,8 @@ namespace Garage_2._0.Controllers
                 "arrivalTime_desc" => model.OrderByDescending(s => s.ArrivalTime).ToList(),
                 "wheels" => model.OrderBy(s => s.NumberOfWheels).ToList(),
                 "wheels_desc" => model.OrderByDescending(s => s.NumberOfWheels).ToList(),
+                "parkingSpot" => model.OrderBy(s => s.ParkingSpot).ToList(),
+                "parkingSpot_desc" => model.OrderByDescending(s => s.ParkingSpot).ToList(),
                 _ => model.OrderBy(s => s.VehicleType).ToList(),
             };
 

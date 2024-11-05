@@ -35,10 +35,11 @@
                         @Html.DisplayNameFor(model => model.ArrivalTime)
                     </a>
                 </th>
-                <td>
-      @* ToDo: Add sortOrder *@
-                    @Html.DisplayNameFor(model => model.ParkingSpot)
-                </td>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["ParkingSpotSortParm"]" class="text-white">
+                        @Html.DisplayNameFor(model => model.ParkingSpot)
+                    </a>
+                </th>
                 <th class="text-white">
                     @Html.DisplayNameFor(model => model.ParkedTime)
                 </th>
