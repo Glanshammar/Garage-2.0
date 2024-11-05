@@ -224,7 +224,22 @@ namespace Garage_2._0.Controllers
                     return View(parkedVehicle);
                 }
 
-                // Rest of your code for assigning parking spot and saving...
+                // Find the first available parking spot
+                var availableSpotIndex = garage.ParkingSpots.FindIndex(spot => !spot.occupied);
+                if (availableSpotIndex == -1)
+                {
+                    TempData["ErrorMessage"] = "No available parking spots.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                parkedVehicle.ParkingSpot = availableSpotIndex;
+                garage.ParkingSpots[availableSpotIndex].occupied = true;
+
+                // Add the vehicle to the context
+                await _context.ParkedVehicle.AddAsync(parkedVehicle);
+        
+                // Save changes to the database
+                await _context.SaveChangesAsync();
 
                 // Invalidate the cache
                 _cache.Remove("ParkedVehiclesIndex");
