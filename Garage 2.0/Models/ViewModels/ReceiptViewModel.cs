@@ -21,9 +21,11 @@ namespace Garage_2._0.Models.ViewModels
         [Display(Name = "Checkout Time")]
         public DateTime CheckoutTime { get; set; }
         
-        [Display(Name = "Price ")]
+        [Display(Name = "Price")]
         public decimal Price { get; set; }
         
+        [Display(Name = "Parking Spot")]
+        public int ParkingSpot { get; set; }
         public bool IsConfirmation { get; set; }
     }
 }

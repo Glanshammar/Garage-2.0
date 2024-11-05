@@ -1,4 +1,4 @@
-﻿@model Garage_2._0.Models.ViewModels.ReceiptViewModel
+﻿@model ReceiptViewModel
 
 @{
     ViewData["Title"] = "ShowReceipt";
@@ -43,7 +43,7 @@
                     @Html.DisplayNameFor(m => m.ParkedTime)
                 </dt>
                 <dd class="col-sm-8">
-                    @Model.ParkedTime.Hours hours and @Model.ParkedTime.Minutes minutes
+                    @Html.DisplayFor(m => m.ParkedTime)
                 </dd>
 
                 <dt class="col-sm-4 fw-bold">
@@ -51,6 +51,13 @@
                 </dt>
                 <dd class="col-sm-8">
                     @Model.Price.ToString("C")
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(m => m.ParkingSpot)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(m => m.ParkingSpot)
                 </dd>
             </dl>
 

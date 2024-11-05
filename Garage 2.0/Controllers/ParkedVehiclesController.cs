@@ -395,7 +395,7 @@ namespace Garage_2._0.Controllers
             TempData["CheckoutTime"] = checkoutTime;
             TempData["ParkedTime"] = parkedTime.ToString();
             TempData["Price"] = price.ToString();
-
+            TempData["ParkingSpot"] = parkedVehicle.ParkingSpot;
 
             garage.ParkingSpots[parkedVehicle.ParkingSpot].occupied = false;
             _context.ParkedVehicle.Remove(parkedVehicle);
@@ -403,10 +403,9 @@ namespace Garage_2._0.Controllers
 
             // Invalidate the cache
             _cache.Remove("ParkedVehiclesIndex");
-            
+    
             // Redirect to ShowReceipt with the vehicle's id to display the final receipt
             return RedirectToAction("ShowReceipt", new { id = id });
-
         }
 
         private bool ParkedVehicleExists(int id)
@@ -418,7 +417,6 @@ namespace Garage_2._0.Controllers
         // GET: ParkedVehicles/ShowReceipt/5
         public async Task<IActionResult> ShowReceipt(int id)
         {
-            var parkedVehicle = await _context.ParkedVehicle.FirstOrDefaultAsync(v => v.Id == id);
             if (TempData["RegistrationNumber"] == null)
             {
                 TempData["ErrorMessage"] = "Vehicle not found.";
@@ -433,11 +431,13 @@ namespace Garage_2._0.Controllers
                 CheckoutTime = DateTime.Parse(TempData["CheckoutTime"].ToString()),
                 ParkedTime = TimeSpan.Parse(TempData["ParkedTime"].ToString()),
                 Price = decimal.Parse(TempData["Price"].ToString()),
+                ParkingSpot = int.Parse(TempData["ParkingSpot"].ToString()),
                 IsConfirmation = false
             };
 
-            return View("ShowReceipt", receiptViewModel);
+            return View(receiptViewModel);
         }
+
 
         // Helper method to calculate the price based on parked time
         private static decimal CalculateParkingPrice(TimeSpan parkedTime)
