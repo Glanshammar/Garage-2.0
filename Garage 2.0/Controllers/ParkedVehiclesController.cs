@@ -341,21 +341,18 @@ namespace Garage_2._0.Controllers
             return View(parkedVehicle);
         }
 
-        // GET: ParkedVehicles/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: ParkedVehicles/Checkout/5
+        public async Task<IActionResult> Checkout(int? id)
         {
             if (id == null)
             {
-                TempData["ErrorMessage"] = "Invalid vehicle ID provided.";
                 return NotFound();
             }
 
             var parkedVehicle = await _context.ParkedVehicle.FirstOrDefaultAsync(m => m.Id == id);
-            
+    
             if (parkedVehicle == null)
             {
-                // Set the error message in TempData if the vehicle is not found
-                TempData["ErrorMessage"] = "Vehicle not found.";
                 return NotFound();
             }
 
@@ -367,22 +364,22 @@ namespace Garage_2._0.Controllers
                 ArrivalTime = parkedVehicle.ArrivalTime,
                 ParkedTime = DateTime.Now.Subtract(parkedVehicle.ArrivalTime),
                 ParkingSpot = parkedVehicle.ParkingSpot,
-                CheckoutTime = DateTime.Now
+                CheckoutTime = DateTime.Now,
+                ParkedCost = CalculateParkingPrice(DateTime.Now.Subtract(parkedVehicle.ArrivalTime))
             };
 
-            return View(parkedVehicle);
+            return View(checkoutViewModel);
         }
 
-        // POST: ParkedVehicles/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: ParkedVehicles/Checkout/5
+        [HttpPost, ActionName("Checkout")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> CheckoutConfirmed(int id)
         {
             var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
-            if (parkedVehicle != null)
+            if (parkedVehicle == null)
             {
-                
-                _context.ParkedVehicle.Remove(parkedVehicle);
+                return NotFound();
             }
 
             var checkoutTime = DateTime.Now;

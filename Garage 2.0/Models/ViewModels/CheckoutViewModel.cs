@@ -9,6 +9,6 @@ public class CheckoutViewModel
     public TimeSpan ParkedTime { get; set; }
     public int ParkingSpot { get; set; }
     public DateTime CheckoutTime { get; set; }
-
+    public decimal ParkedCost { get; set; }
 }
   
