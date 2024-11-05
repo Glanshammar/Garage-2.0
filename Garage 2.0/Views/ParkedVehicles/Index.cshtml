@@ -1,69 +1,121 @@
-﻿@model IEnumerable<Garage_2._0.Models.ViewModels.ParkedVehicleIndexViewModel>
+@model IEnumerable<Garage_2._0.Models.ViewModels.ParkedVehicleIndexViewModel> 
 
 @{
     ViewData["Title"] = "Garage 2.0";
+    var statistics = (ParkingStatisticsViewModel)ViewData["Statistics"];
 }
 
-<h1>Index</h1>
+<div class="container mt-5">
+    <h1 class="display-4 text-center mb-4">@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<div id="vehicleList" data-current-sort="@ViewData["CurrentSort"]">
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["VehicleTypeSortParm"]">
-                    @Html.DisplayNameFor(model => model.VehicleType)
-                </a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["RegistrationNumberSortParm"]">
-                    @Html.DisplayNameFor(model => model.RegistrationNumber)
-                </a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["WheelsSortParm"]">
-                    @Html.DisplayNameFor(model => model.NumberOfWheels)
-                </a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["ArrivalTimeSortParm"]">
-                    @Html.DisplayNameFor(model => model.ArrivalTime)
-                </a>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ParkedTime)
-            </th>
-                <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.VehicleType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegistrationNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfWheels)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArrivalTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ParkedTime)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Checkout" asp-route-id="@item.Id" class="btn btn-danger btn-sm delete-vehicle"
-                           data-registration="@item.RegistrationNumber">Checkout</a>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+    <div class="d-flex justify-content-between mb-3">
+        <a asp-action="Create" class="btn btn-primary">Create New</a>
+    </div>
+
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["VehicleTypeSortParm"]" class="text-white">
+                        @Html.DisplayNameFor(model => model.VehicleType)
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["RegistrationNumberSortParm"]" class="text-white">
+                        @Html.DisplayNameFor(model => model.RegistrationNumber)
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["WheelsSortParm"]" class="text-white">
+                        @Html.DisplayNameFor(model => model.NumberOfWheels)
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["ArrivalTimeSortParm"]" class="text-white">
+                        @Html.DisplayNameFor(model => model.ArrivalTime)
+                    </a>
+                </th>
+                <th class="text-white">
+                    @Html.DisplayNameFor(model => model.ParkedTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ParkedCost)
+                </th>
+                <th class="text-center text-white">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VehicleType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumberOfWheels)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ArrivalTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParkedTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParkedCost)
+                </td>
+                <td class="text-center">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning mx-1">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info mx-1">Details</a>
+                    <a asp-action="Checkout" asp-route-id="@item.Id" class="btn btn-sm btn-danger mx-1">Checkout</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="container mt-5">
+    <h2 class="display-5 text-center mb-4">Parking Statistics</h2>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">General Statistics</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Total Vehicles
+                        <span class="badge bg-primary rounded-pill">@statistics.TotalVehicles</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Total Wheels
+                        <span class="badge bg-primary rounded-pill">@statistics.TotalWheels</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Total Revenue
+                        <span class="badge bg-success rounded-pill">@statistics.TotalRevenue.ToString("C")</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">Vehicle Type Distribution</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var kvp in statistics.VehicleTypeCounts)
+                    {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        @kvp.Key
+                        <span class="badge bg-primary rounded-pill">@kvp.Value</span>
+                    </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

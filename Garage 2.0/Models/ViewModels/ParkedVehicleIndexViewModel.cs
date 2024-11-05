@@ -23,5 +23,9 @@ namespace Garage_2._0.Models.ViewModels
         [Display(Name = "Time Parked")]
         [DisplayFormat(DataFormatString = @"{0:%d} days {0:%h} hours {0:%m} minutes")]
         public TimeSpan ParkedTime { get; set; }
+        
+        [Display(Name = "Parked Cost")]
+        [DataType(DataType.Currency)]
+        public decimal ParkedCost { get; set; }
     }
 }

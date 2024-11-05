@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Garage_2._0.Data;
 using Garage_2._0.Models;
-using Garage_2._0.Models.ViewModels;
 
 namespace Garage_2._0.Controllers
 {
@@ -15,7 +14,7 @@ namespace Garage_2._0.Controllers
     {
         private readonly Garage_2_0Context _context;
         private readonly IMemoryCache _cache;
-        
+
         public ParkedVehiclesController(Garage_2_0Context context, IMemoryCache cache)
         {
             _context = context;
@@ -23,7 +22,6 @@ namespace Garage_2._0.Controllers
         }
 
         // GET: ParkedVehicles
-        
         public async Task<IActionResult> Index(string sortOrder)
         {
             const string cacheKey = "ParkedVehiclesIndex";
@@ -48,7 +46,8 @@ namespace Garage_2._0.Controllers
                         RegistrationNumber = e.RegistrationNumber,
                         ArrivalTime = e.ArrivalTime,
                         ParkedTime = DateTime.Now.Subtract(e.ArrivalTime),
-                        NumberOfWheels = e.NumberOfWheels
+                        NumberOfWheels = e.NumberOfWheels,
+                        ParkedCost = CalculateParkingPrice(DateTime.Now.Subtract(e.ArrivalTime))
                     })
                     .ToListAsync();
 
@@ -59,6 +58,13 @@ namespace Garage_2._0.Controllers
 
                 // Save data in cache
                 _cache.Set(cacheKey, model, cacheEntryOptions);
+            } else {
+                // Update ParkedTime and ParkedCost for cached items
+                foreach (var item in model)
+                {
+                    item.ParkedTime = DateTime.Now.Subtract(item.ArrivalTime);
+                    item.ParkedCost = CalculateParkingPrice(item.ParkedTime);
+                }
             }
 
             // Apply sorting
@@ -75,12 +81,24 @@ namespace Garage_2._0.Controllers
                 _ => model.OrderBy(s => s.VehicleType).ToList(),
             };
 
+            // Calculate statistics
+            var statistics = new ParkingStatisticsViewModel
+            {
+                TotalVehicles = model.Count,
+                TotalWheels = model.Sum(v => v.NumberOfWheels),
+                TotalRevenue = model.Sum(v => v.ParkedCost),
+                VehicleTypeCounts = model.GroupBy(v => v.VehicleType)
+                    .ToDictionary(g => g.Key, g => g.Count())
+            };
+
+            // Pass both model and statistics to the view using ViewData
+            ViewData["Statistics"] = statistics;
+
             return View("Index", model ?? new List<ParkedVehicleIndexViewModel>());
         }
 
         public async Task<IActionResult> Search()
         {
-            
             return View("Search");
         }
 
@@ -171,6 +189,7 @@ namespace Garage_2._0.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
             return View(parkedVehicle);
         }
@@ -190,6 +209,7 @@ namespace Garage_2._0.Controllers
                 TempData["ErrorMessage"] = "Vehicle not found.";
                 return NotFound();
             }
+
             ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
             return View(parkedVehicle);
         }
@@ -255,8 +275,10 @@ namespace Garage_2._0.Controllers
                         //throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
             return View(parkedVehicle);
         }
@@ -270,8 +292,8 @@ namespace Garage_2._0.Controllers
                 return NotFound();
             }
 
-            var parkedVehicle = await _context.ParkedVehicle
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var parkedVehicle = await _context.ParkedVehicle.FirstOrDefaultAsync(m => m.Id == id);
+            
             if (parkedVehicle == null)
             {
                 // Set the error message in TempData if the vehicle is not found
@@ -296,17 +318,64 @@ namespace Garage_2._0.Controllers
                 _context.ParkedVehicle.Remove(parkedVehicle);
             }
 
+            var checkoutTime = DateTime.Now;
+            var parkedTime = checkoutTime - parkedVehicle.ArrivalTime;
+            var price = CalculateParkingPrice(parkedTime);
 
+            // Store details in TempData
+            TempData["VehicleType"] = parkedVehicle.VehicleType.ToString();
+            TempData["RegistrationNumber"] = parkedVehicle.RegistrationNumber;
+            TempData["ArrivalTime"] = parkedVehicle.ArrivalTime;
+            TempData["CheckoutTime"] = checkoutTime;
+            TempData["ParkedTime"] = parkedTime.ToString();
+            TempData["Price"] = price.ToString();
+
+
+            _context.ParkedVehicle.Remove(parkedVehicle);
             await _context.SaveChangesAsync();
 
+            // Invalidate the cache
+            _cache.Remove("ParkedVehiclesIndex");
             
-            TempData["SuccessMessage"] = "Vehicle deleted successfully!";
-            return RedirectToAction(nameof(Index));
+            // Redirect to ShowReceipt with the vehicle's id to display the final receipt
+            return RedirectToAction("ShowReceipt", new { id = id });
+
         }
 
         private bool ParkedVehicleExists(int id)
         {
             return _context.ParkedVehicle.Any(e => e.Id == id);
+        }
+
+
+        // GET: ParkedVehicles/ShowReceipt/5
+        public async Task<IActionResult> ShowReceipt(int id)
+        {
+            var parkedVehicle = await _context.ParkedVehicle.FirstOrDefaultAsync(v => v.Id == id);
+            if (TempData["RegistrationNumber"] == null)
+            {
+                return NotFound();
+            }
+
+            var receiptViewModel = new ReceiptViewModel
+            {
+                VehicleType = Enum.Parse<VehicleType>(TempData["VehicleType"].ToString()),
+                RegistrationNumber = TempData["RegistrationNumber"].ToString(),
+                ArrivalTime = DateTime.Parse(TempData["ArrivalTime"].ToString()),
+                CheckoutTime = DateTime.Parse(TempData["CheckoutTime"].ToString()),
+                ParkedTime = TimeSpan.Parse(TempData["ParkedTime"].ToString()),
+                Price = decimal.Parse(TempData["Price"].ToString()),
+                IsConfirmation = false
+            };
+
+            return View("ShowReceipt", receiptViewModel);
+        }
+
+        // Helper method to calculate the price based on parked time
+        private static decimal CalculateParkingPrice(TimeSpan parkedTime)
+        {
+            decimal hourlyRate = 50m; //  hourly rate
+            return (decimal)parkedTime.TotalHours * hourlyRate;
         }
     }
 }
