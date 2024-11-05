@@ -366,7 +366,8 @@ namespace Garage_2._0.Controllers
                     ArrivalTime = parkedVehicle.ArrivalTime,
                     ParkedTime = DateTime.Now.Subtract(parkedVehicle.ArrivalTime),
                     ParkedCost = CalculateParkingPrice(DateTime.Now.Subtract(parkedVehicle.ArrivalTime))
-                }
+                },
+                CheckoutTime = DateTime.Now
             };
 
             return View(detailsViewModel);
