@@ -1,64 +1,50 @@
 ﻿@model IEnumerable<Garage_2._0.Models.ParkedVehicle>
 
-
-<table class="table">
-    <thead>
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="thead-dark">
         <tr>
-            <th >
-                @Html.DisplayNameFor(model => model.RegistrationNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VehicleType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Color)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Brand)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Model)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumberOfWheels)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ArrivalTime)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.RegistrationNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.VehicleType)</th>
+            <th>@Html.DisplayNameFor(model => model.Color)</th>
+            <th>@Html.DisplayNameFor(model => model.Brand)</th>
+            <th>@Html.DisplayNameFor(model => model.Model)</th>
+            <th>@Html.DisplayNameFor(model => model.NumberOfWheels)</th>
+            <th>@Html.DisplayNameFor(model => model.ArrivalTime)</th>
+            <th>Actions</th>
         </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-            <tr>                            
-                <td>
-                    @Html.DisplayFor(modelItem => item.RegistrationNumber)
-                </td>
-            <td> 
-                @Html.DisplayFor(modelItem => item.VehicleType)
-            </td>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.RegistrationNumber)</td>
+            <td>@Html.DisplayFor(modelItem => item.VehicleType)</td>
             <td>
-                @Html.DisplayFor(modelItem => item.Color)
+                        <span class="badge" style="background-color: @item.Color; color: @(IsColorLight(item.Color) ? "#000" : "#fff")">
+                            @Html.DisplayFor(modelItem => item.Color)
+                        </span>
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Brand)
+            <td>@Html.DisplayFor(modelItem => item.Brand)</td>
+            <td>@Html.DisplayFor(modelItem => item.Model)</td>
+            <td>@Html.DisplayFor(modelItem => item.NumberOfWheels)</td>
+            <td>@item.ArrivalTime.ToString("yyyy-MM-dd HH:mm")</td>
+            <td class="text-center">
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning mx-1">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info mx-1">Details</a>
+                <a asp-action="Checkout" asp-route-id="@item.Id" class="btn btn-sm btn-danger mx-1">Checkout</a>
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Model)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfWheels)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArrivalTime)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-                
-            </tr>
+        </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+@functions {
+bool IsColorLight(string color)
+{
+// Simple function to determine if a color is light or dark
+// You might want to implement a more sophisticated version
+return color.ToLower() == "white" || color.ToLower() == "yellow" || color.ToLower() == "lime";
 }
-    </tbody>
-</table>
+}
