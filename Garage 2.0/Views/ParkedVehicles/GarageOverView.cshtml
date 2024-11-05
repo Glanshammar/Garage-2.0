@@ -32,7 +32,8 @@
                 @for (int x = 0; x < garage.vehiclesPerRow; x++)
                 {
                     <td class="my-5">
-
+                            <p class="text-center mb-1">
+                                @Html.DisplayTextFor(model => model.garage.ParkingSpots.FirstOrDefault(p => p.row == y && p.column == x).ParkingSpotId). </p>
                         @if (garage.ParkingSpots.FirstOrDefault(p => p.row == y && p.column == x).occupied == true)
                             {
                             <div class="parkingSpot occupied bg-danger " style="min-width:100px; height:120px;">
