@@ -4,6 +4,7 @@ using Garage_2._0.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Garage_2._0.Migrations
 {
     [DbContext(typeof(Garage_2_0Context))]
-    partial class Garage_2_0ContextModelSnapshot : ModelSnapshot
+    [Migration("20241104084713_AddedParkingSpots")]
+    partial class AddedParkingSpots
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,21 +51,15 @@ namespace Garage_2._0.Migrations
                     b.Property<int>("NumberOfWheels")
                         .HasColumnType("int");
 
-                    b.Property<int>("ParkedColumn")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ParkedRow")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ParkingSpot")
-                        .HasColumnType("int");
-
                     b.Property<string>("RegistrationNumber")
                         .IsRequired()
                         .HasMaxLength(6)
                         .HasColumnType("nvarchar(6)");
 
                     b.Property<int>("VehicleType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("parkingSpot")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -73,44 +70,38 @@ namespace Garage_2._0.Migrations
                         new
                         {
                             Id = 1,
-                            ArrivalTime = new DateTime(2024, 11, 4, 13, 57, 10, 751, DateTimeKind.Local).AddTicks(4163),
+                            ArrivalTime = new DateTime(2024, 11, 4, 9, 47, 11, 739, DateTimeKind.Local).AddTicks(5107),
                             Brand = "Volkswagen",
                             Color = "Blue",
                             Model = "Jetta",
                             NumberOfWheels = 4,
-                            ParkedColumn = 0,
-                            ParkedRow = 0,
-                            ParkingSpot = 0,
                             RegistrationNumber = "ABC123",
-                            VehicleType = 0
+                            VehicleType = 0,
+                            parkingSpot = 1
                         },
                         new
                         {
                             Id = 2,
-                            ArrivalTime = new DateTime(2024, 11, 4, 13, 57, 10, 751, DateTimeKind.Local).AddTicks(4222),
+                            ArrivalTime = new DateTime(2024, 11, 4, 9, 47, 11, 739, DateTimeKind.Local).AddTicks(5195),
                             Brand = "Volkswagen",
                             Color = "Blue",
                             Model = "Taos",
                             NumberOfWheels = 4,
-                            ParkedColumn = 0,
-                            ParkedRow = 0,
-                            ParkingSpot = 1,
                             RegistrationNumber = "DEF123",
-                            VehicleType = 0
+                            VehicleType = 0,
+                            parkingSpot = 2
                         },
                         new
                         {
                             Id = 3,
-                            ArrivalTime = new DateTime(2024, 11, 4, 13, 57, 10, 751, DateTimeKind.Local).AddTicks(4227),
+                            ArrivalTime = new DateTime(2024, 11, 4, 9, 47, 11, 739, DateTimeKind.Local).AddTicks(5199),
                             Brand = "Something",
                             Color = "Black",
                             Model = "OrOther",
                             NumberOfWheels = 2,
-                            ParkedColumn = 2,
-                            ParkedRow = 0,
-                            ParkingSpot = 2,
                             RegistrationNumber = "CTF345",
-                            VehicleType = 1
+                            VehicleType = 1,
+                            parkingSpot = 3
                         });
                 });
 #pragma warning restore 612, 618

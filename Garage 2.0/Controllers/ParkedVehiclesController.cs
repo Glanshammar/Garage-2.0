@@ -15,6 +15,11 @@ namespace Garage_2._0.Controllers
         private readonly Garage_2_0Context _context;
         private readonly IMemoryCache _cache;
 
+        private readonly int numberOfParkingSpots = 10;
+        private readonly int vehiclesPerRow = 5;
+
+        private static Garage garage = new Garage(10, 5);        
+        
         public ParkedVehiclesController(Garage_2_0Context context, IMemoryCache cache)
         {
             _context = context;
@@ -24,6 +29,14 @@ namespace Garage_2._0.Controllers
         // GET: ParkedVehicles
         public async Task<IActionResult> Index(string sortOrder)
         {
+            //Control that garage has been loaded
+                      if (garage.generated == false)
+            {
+                GenerateGarage();
+
+            }
+
+
             const string cacheKey = "ParkedVehiclesIndex";
 
             ViewData["VehicleTypeSortParm"] = sortOrder == "vehicleType" ? "vehicleType_desc" : "vehicleType";
@@ -47,7 +60,8 @@ namespace Garage_2._0.Controllers
                         ArrivalTime = e.ArrivalTime,
                         ParkedTime = DateTime.Now.Subtract(e.ArrivalTime),
                         NumberOfWheels = e.NumberOfWheels,
-                        ParkedCost = CalculateParkingPrice(DateTime.Now.Subtract(e.ArrivalTime))
+                        ParkedCost = CalculateParkingPrice(DateTime.Now.Subtract(e.ArrivalTime)),
+                        ParkingSpot = e.ParkingSpot
                     })
                     .ToListAsync();
 
@@ -157,6 +171,16 @@ namespace Garage_2._0.Controllers
         // GET: ParkedVehicles/Create
         public IActionResult Create()
         {
+            //Check if there are any parking spaces available
+            if (_context.ParkedVehicle.Count() >= garage.numberOfParkingSpots)
+            {
+
+                //ToDo: Add user feedback
+
+                ModelState.AddModelError("GarageFull", "The garage is full.");
+                return RedirectToAction(nameof(Index));
+            }
+
             ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
             return View();
         }
@@ -169,14 +193,23 @@ namespace Garage_2._0.Controllers
             if (ModelState.IsValid)
             {
 
+               
+
                 // Check if the registration number already exists
                 if (await _context.ParkedVehicle.AnyAsync(v => v.RegistrationNumber == parkedVehicle.RegistrationNumber))
                 {
-                    TempData["ErrorMessage"] = "This registration number is already in use.";
-                    ModelState.AddModelError("RegistrationNumber", "This registration number is already in use.");
+                    ModelState.AddModelError("Create", "This registration number is already in use.");
                     ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
                     return View(parkedVehicle);
                 }
+
+                // Assign parking spot
+
+                ParkingSpot assignedParkingSpot = garage.ParkingSpots.FirstOrDefault(p => p.occupied == false);
+                parkedVehicle.ParkingSpot = assignedParkingSpot.ParkingSpotId;
+                parkedVehicle.ParkedRow = assignedParkingSpot.row;
+                parkedVehicle.ParkedColumn = assignedParkingSpot.column;
+                garage.ParkingSpots[assignedParkingSpot.ParkingSpotId].occupied = true;
 
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
@@ -301,7 +334,16 @@ namespace Garage_2._0.Controllers
                 return NotFound();
             }
 
-
+            var checkoutViewModel = new CheckoutViewModel
+            {
+                Id = parkedVehicle.Id,
+                VehicleType = parkedVehicle.VehicleType,
+                RegistrationNumber = parkedVehicle.RegistrationNumber,
+                ArrivalTime = parkedVehicle.ArrivalTime,
+                ParkedTime = DateTime.Now.Subtract(parkedVehicle.ArrivalTime),
+                ParkingSpot = parkedVehicle.ParkingSpot,
+                CheckoutTime = DateTime.Now
+            };
 
             return View(parkedVehicle);
         }
@@ -331,6 +373,7 @@ namespace Garage_2._0.Controllers
             TempData["Price"] = price.ToString();
 
 
+            garage.ParkingSpots[parkedVehicle.ParkingSpot].occupied = false;
             _context.ParkedVehicle.Remove(parkedVehicle);
             await _context.SaveChangesAsync();
 
@@ -376,6 +419,30 @@ namespace Garage_2._0.Controllers
         {
             decimal hourlyRate = 50m; //  hourly rate
             return (decimal)parkedTime.TotalHours * hourlyRate;
+        }
+        
+        public Garage GenerateGarage()
+        {
+            //Fetches parkingspots and columns from reference ints at top of controller for easier editing
+       
+            garage.BuildGarage();
+
+            foreach (var vehicle in _context.ParkedVehicle)
+            {
+                
+                garage.ParkingSpots[vehicle.ParkingSpot].occupied = true;
+            }
+            garage.generated = true;
+            return garage;
+        }
+
+        public async Task<IActionResult> GarageOverView()
+        {
+
+            var model = new ParkingSpotViewModel(garage, await _context.ParkedVehicle.ToListAsync());
+                
+            
+            return View(model);
         }
     }
 }

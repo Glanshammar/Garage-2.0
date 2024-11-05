@@ -27,5 +27,7 @@ namespace Garage_2._0.Models.ViewModels
         [Display(Name = "Parked Cost")]
         [DataType(DataType.Currency)]
         public decimal ParkedCost { get; set; }
+
+        public int ParkingSpot {  get; set; }
     }
 }
