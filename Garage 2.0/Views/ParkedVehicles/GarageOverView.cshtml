@@ -1,0 +1,39 @@
+﻿@model ParkingSpotViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Garage garage = Model.garage;
+    var vehicleList = Model.parkedVehicleModel;
+
+    ParkingSpot currentParkingSpot = new(0,0,0,false);
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table>
+    <tbody>
+        @for (int y = 0; y < garage.numberOfRows; y++)
+        {
+            <tr class="d-flex bg-alert justify-content-evenly">
+                @for (int x = 0; x < garage.vehiclesPerRow; x++)
+                {
+                    <td>
+
+                        @if (garage.ParkingSpots.FirstOrDefault(p => p.row == y && p.column == x).occupied == true)
+                            {
+                            <div class="parkingSpot occupied bg-danger mx-2 " style="min-width:100px; height:120px;">
+                            </div>
+                        }
+                        else{
+                        <div class="parkingSpot available bg-success mx-2 " style="min-width:100px; height:120px;">
+                        </div>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

@@ -35,6 +35,10 @@
                         @Html.DisplayNameFor(model => model.ArrivalTime)
                     </a>
                 </th>
+                <td>
+      @* ToDo: Add sortOrder *@
+                    @Html.DisplayNameFor(model => model.ParkingSpot)
+                </td>
                 <th class="text-white">
                     @Html.DisplayNameFor(model => model.ParkedTime)
                 </th>
@@ -58,7 +62,10 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ArrivalTime)
-                </td>
+                </td>  
+                <th>
+      @Html.DisplayFor(modelItem => item.ParkingSpot)
+  </th>
                 <td>
                     @Html.DisplayFor(modelItem => item.ParkedTime)
                 </td>
