@@ -20,3 +20,10 @@ html {
 body {
   margin-bottom: 60px;
 }
+.hide{
+    display:none;
+}
+.hiddenController:hover + .hide{
+    display:block;
+    color:white;
+}
