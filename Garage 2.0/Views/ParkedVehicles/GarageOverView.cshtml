@@ -31,12 +31,19 @@
             <tr class="d-flex bg-alert justify-content-evenly my-5">
                 @for (int x = 0; x < garage.vehiclesPerRow; x++)
                 {
-                    <td class="my-5">
+                        <td class="my-5">
                             <p class="text-center mb-1">
                                 @Html.DisplayTextFor(model => model.garage.ParkingSpots.FirstOrDefault(p => p.row == y && p.column == x).ParkingSpotId). </p>
                         @if (garage.ParkingSpots.FirstOrDefault(p => p.row == y && p.column == x).occupied == true)
                             {
-                            <div class="parkingSpot occupied bg-danger " style="min-width:100px; height:120px;">
+                                <div class="parkingSpot hiddenController occupied bg-danger align-content-center" style="min-width:100px; height:120px;">
+
+                                    <a asp-action="Details" asp-route-id="@Html.DisplayTextFor(modelItem => modelItem.parkedVehicleModel.FirstOrDefault(p => p.ParkedRow == y && p.ParkedColumn == x).Id)" class=" d-inline-block w-100 h-100 fw-bold text-center text-white text-decoration-none align-content-center ">
+
+                                        @Html.DisplayTextFor(modelItem => modelItem.parkedVehicleModel.FirstOrDefault(p => p.ParkedRow == y && p.ParkedColumn == x).RegistrationNumber)
+                                        <p class="hide">View details</p>
+
+                                    </a>
                             </div>
                         }
                         else{
