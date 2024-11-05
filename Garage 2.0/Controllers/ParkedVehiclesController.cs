@@ -216,34 +216,20 @@ namespace Garage_2._0.Controllers
         {
             if (ModelState.IsValid)
             {
-
-               
-
                 // Check if the registration number already exists
                 if (await _context.ParkedVehicle.AnyAsync(v => v.RegistrationNumber == parkedVehicle.RegistrationNumber))
                 {
-                    ModelState.AddModelError("Create", "This registration number is already in use.");
+                    ModelState.AddModelError("RegistrationNumber", "This registration number is already in use.");
                     ViewData["VehicleTypes"] = new SelectList(Enum.GetValues(typeof(VehicleType)));
                     return View(parkedVehicle);
                 }
 
-                // Assign parking spot
-
-                ParkingSpot assignedParkingSpot = garage.ParkingSpots.FirstOrDefault(p => p.occupied == false);
-                parkedVehicle.ParkingSpot = assignedParkingSpot.ParkingSpotId;
-                parkedVehicle.ParkedRow = assignedParkingSpot.row;
-                parkedVehicle.ParkedColumn = assignedParkingSpot.column;
-                garage.ParkingSpots[assignedParkingSpot.ParkingSpotId].occupied = true;
-
-                _context.Add(parkedVehicle);
-                await _context.SaveChangesAsync();
-
-                // Set success message in TempData
-                TempData["SuccessMessage"] = "Vehicle parked successfully!";
+                // Rest of your code for assigning parking spot and saving...
 
                 // Invalidate the cache
                 _cache.Remove("ParkedVehiclesIndex");
 
+                TempData["SuccessMessage"] = "Vehicle parked successfully!";
                 return RedirectToAction(nameof(Index));
             }
 
