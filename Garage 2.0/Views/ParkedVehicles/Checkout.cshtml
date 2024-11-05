@@ -1,57 +1,74 @@
-﻿@model CheckoutViewModel
+﻿@model DetailsViewModel
 
 @{
     ViewData["Title"] = "Checkout Vehicle";
 }
 
-<h1>Checkout Vehicle</h1>
-
-<h3>Are you sure you want to check out this vehicle?</h3>
-<div>
-    <h4>Vehicle Details</h4>
+<div class="container mt-5">
+    <h1 class="text-center">Checkout Vehicle</h1>
+    <h3 class="text-center mt-4">Are you sure you want to check out this vehicle?</h3>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.VehicleType)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.VehicleType)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RegistrationNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RegistrationNumber)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ArrivalTime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ArrivalTime)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ParkedTime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ParkedTime)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CheckoutTime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CheckoutTime)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ParkingSpot)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ParkingSpot)
-        </dd>
-    </dl>
-    
-    <form asp-action="Checkout">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Checkout" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <dl class="row shadow p-4 rounded bg-white">
+                <dt class="col-sm-3 fw-bold">
+                    @Html.DisplayNameFor(model => model.Vehicle.VehicleType)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Vehicle.VehicleType)
+                </dd>
+
+                <dt class="col-sm-3 fw-bold">
+                    @Html.DisplayNameFor(model => model.Vehicle.RegistrationNumber)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Vehicle.RegistrationNumber)
+                </dd>
+
+                <dt class="col-sm-3 fw-bold">
+                    @Html.DisplayNameFor(model => model.Vehicle.ArrivalTime)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Vehicle.ArrivalTime)
+                </dd>
+
+                <dt class="col-sm-3 fw-bold">
+                    @Html.DisplayNameFor(model => model.VehicleIndexViewModel.ParkedTime)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.VehicleIndexViewModel.ParkedTime)
+                </dd>
+
+                <dt class="col-sm-3 fw-bold">
+                    Checkout Time
+                </dt>
+                <dd class="col-sm-9">
+                    @DateTime.Now
+                </dd>
+
+                <dt class="col-sm-3 fw-bold">
+                    @Html.DisplayNameFor(model => model.Vehicle.ParkingSpot)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Vehicle.ParkingSpot)
+                </dd>
+
+                <dt class="col-sm-3 fw-bold">
+                    @Html.DisplayNameFor(model => model.VehicleIndexViewModel.ParkedCost)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.VehicleIndexViewModel.ParkedCost)
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        <form asp-action="Checkout">
+            <input type="hidden" asp-for="Vehicle.Id" />
+            <input type="submit" value="Checkout" class="btn btn-danger me-2" />
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </form>
+    </div>
 </div>

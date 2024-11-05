@@ -324,24 +324,27 @@ namespace Garage_2._0.Controllers
             }
 
             var parkedVehicle = await _context.ParkedVehicle.FirstOrDefaultAsync(m => m.Id == id);
-            
+    
             if (parkedVehicle == null)
             {
                 return NotFound();
             }
 
-            var checkoutViewModel = new CheckoutViewModel
+            var detailsViewModel = new DetailsViewModel
             {
-                Id = parkedVehicle.Id,
-                VehicleType = parkedVehicle.VehicleType,
-                RegistrationNumber = parkedVehicle.RegistrationNumber,
-                ArrivalTime = parkedVehicle.ArrivalTime,
-                ParkedTime = DateTime.Now.Subtract(parkedVehicle.ArrivalTime),
-                ParkingSpot = parkedVehicle.ParkingSpot,
-                CheckoutTime = DateTime.Now
+                Vehicle = parkedVehicle,
+                VehicleIndexViewModel = new ParkedVehicleIndexViewModel
+                {
+                    Id = parkedVehicle.Id,
+                    VehicleType = parkedVehicle.VehicleType,
+                    RegistrationNumber = parkedVehicle.RegistrationNumber,
+                    ArrivalTime = parkedVehicle.ArrivalTime,
+                    ParkedTime = DateTime.Now.Subtract(parkedVehicle.ArrivalTime),
+                    ParkedCost = CalculateParkingPrice(DateTime.Now.Subtract(parkedVehicle.ArrivalTime))
+                }
             };
 
-            return View(checkoutViewModel);
+            return View(detailsViewModel);
         }
 
         // POST: ParkedVehicles/Checkout/5
