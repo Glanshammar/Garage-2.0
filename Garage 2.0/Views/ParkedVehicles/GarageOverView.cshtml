@@ -8,11 +8,11 @@
     ParkingSpot currentParkingSpot = new(0,0,0,false);
 }
 
-<h1>Index</h1>
+<h1>Garage overview</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<p class="text-danger mb-0">Red = occupied</p>
+    <p class="text-success mt-0 mb-3">Green = available</p>
+
 <table>
     <tbody>
         @for (int y = 0; y < garage.numberOfRows; y++)

@@ -60,8 +60,7 @@ namespace Garage_2._0.Controllers
                         ArrivalTime = e.ArrivalTime,
                         ParkedTime = DateTime.Now.Subtract(e.ArrivalTime),
                         NumberOfWheels = e.NumberOfWheels,
-                        ParkedCost = CalculateParkingPrice(DateTime.Now.Subtract(e.ArrivalTime))
-                        ParkedTime = DateTime.Now.Subtract(e.ArrivalTime),
+                        ParkedCost = CalculateParkingPrice(DateTime.Now.Subtract(e.ArrivalTime)),
                         ParkingSpot = e.ParkingSpot
                     })
                     .ToListAsync();
