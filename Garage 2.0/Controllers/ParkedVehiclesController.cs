@@ -175,8 +175,7 @@ namespace Garage_2._0.Controllers
             if (_context.ParkedVehicle.Count() >= garage.numberOfParkingSpots)
             {
 
-                //ToDo: Add user feedback
-
+                TempData["ErrorMessage"] = "The garage is full.";
                 ModelState.AddModelError("GarageFull", "The garage is full.");
                 return RedirectToAction(nameof(Index));
             }
@@ -397,6 +396,7 @@ namespace Garage_2._0.Controllers
             var parkedVehicle = await _context.ParkedVehicle.FirstOrDefaultAsync(v => v.Id == id);
             if (TempData["RegistrationNumber"] == null)
             {
+                TempData["ErrorMessage"] = "Vehicle not found.";
                 return NotFound();
             }
 
