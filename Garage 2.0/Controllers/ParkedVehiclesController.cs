@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Garage_2._0.Data;
@@ -94,7 +90,7 @@ namespace Garage_2._0.Controllers
             // Pass both model and statistics to the view using ViewData
             ViewData["Statistics"] = statistics;
 
-            return View("Index", model ?? new List<ParkedVehicleIndexViewModel>());
+            return View("Index", model);
         }
 
         public async Task<IActionResult> Search()
