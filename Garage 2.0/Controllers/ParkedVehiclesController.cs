@@ -101,11 +101,25 @@ namespace Garage_2._0.Controllers
                     .ToDictionary(g => g.Key, g => g.Count())
             };
 
+
+            // Calculate the number of available parking spots
+            int totalParkingSpots = garage.numberOfParkingSpots;
+            int occupiedSpots = model.Count;
+            int availableSpots = totalParkingSpots - occupiedSpots;
+
+            // Pass available spots to the view using ViewBag
+            ViewBag.AvailableSpots = availableSpots;
+
+
             // Pass both model and statistics to the view using ViewData
             ViewData["Statistics"] = statistics;
 
             return View("Index", model);
         }
+
+
+
+
 
         public async Task<IActionResult> Search()
         {
