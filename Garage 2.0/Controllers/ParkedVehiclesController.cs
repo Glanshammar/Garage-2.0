@@ -149,7 +149,23 @@ namespace Garage_2._0.Controllers
                 return NotFound();
             }
 
-            return View(parkedVehicle);
+            // Create and populate the DetailsViewModel
+            var viewModel = new DetailsViewModel
+            {
+                Vehicle = parkedVehicle,
+                VehicleIndexViewModel = new ParkedVehicleIndexViewModel
+                {
+                    Id = parkedVehicle.Id,
+                    VehicleType = parkedVehicle.VehicleType,
+                    RegistrationNumber = parkedVehicle.RegistrationNumber,
+                    NumberOfWheels = parkedVehicle.NumberOfWheels,
+                    ArrivalTime = parkedVehicle.ArrivalTime,
+                    ParkedTime = DateTime.Now - parkedVehicle.ArrivalTime,
+                    ParkedCost = CalculateParkingPrice(DateTime.Now - parkedVehicle.ArrivalTime)
+                }
+            };
+
+            return View(viewModel);
         }
 
         // GET: ParkedVehicles/Create

@@ -1,4 +1,4 @@
-﻿@model Garage_2._0.Models.ParkedVehicle
+﻿@model Garage_2._0.Models.ViewModels.DetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -14,59 +14,73 @@
         <div class="col-md-8 offset-md-2">
             <dl class="row shadow p-4 rounded bg-white">
                 <dt class="col-sm-3 fw-bold">
-                    @Html.DisplayNameFor(model => model.VehicleType)
+                    @Html.DisplayNameFor(model => model.VehicleIndexViewModel.VehicleType)
                 </dt>
                 <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.VehicleType)
+                    @Html.DisplayFor(model => model.VehicleIndexViewModel.VehicleType)
                 </dd>
 
                 <dt class="col-sm-3 fw-bold">
-                    @Html.DisplayNameFor(model => model.RegistrationNumber)
+                    @Html.DisplayNameFor(model => model.VehicleIndexViewModel.RegistrationNumber)
                 </dt>
                 <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.RegistrationNumber)
+                    @Html.DisplayFor(model => model.VehicleIndexViewModel.RegistrationNumber)
                 </dd>
 
                 <dt class="col-sm-3 fw-bold">
-                    @Html.DisplayNameFor(model => model.Color)
+                    @Html.DisplayNameFor(model => model.Vehicle.Color)
                 </dt>
                 <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Color)
+                    @Html.DisplayFor(model => model.Vehicle.Color)
                 </dd>
 
                 <dt class="col-sm-3 fw-bold">
-                    @Html.DisplayNameFor(model => model.Brand)
+                    @Html.DisplayNameFor(model => model.Vehicle.Brand)
                 </dt>
                 <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Brand)
+                    @Html.DisplayFor(model => model.Vehicle.Brand)
                 </dd>
 
                 <dt class="col-sm-3 fw-bold">
-                    @Html.DisplayNameFor(model => model.Model)
+                    @Html.DisplayNameFor(model => model.Vehicle.Model)
                 </dt>
                 <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.Model)
+                    @Html.DisplayFor(model => model.Vehicle.Model)
                 </dd>
 
                 <dt class="col-sm-3 fw-bold">
-                    @Html.DisplayNameFor(model => model.NumberOfWheels)
+                    @Html.DisplayNameFor(model => model.Vehicle.NumberOfWheels)
                 </dt>
                 <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.NumberOfWheels)
+                    @Html.DisplayFor(model => model.Vehicle.NumberOfWheels)
                 </dd>
 
                 <dt class="col-sm-3 fw-bold">
-                    @Html.DisplayNameFor(model => model.ArrivalTime)
+                    @Html.DisplayNameFor(model => model.Vehicle.ArrivalTime)
                 </dt>
                 <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.ArrivalTime)
+                    @Html.DisplayFor(model => model.Vehicle.ArrivalTime)
+                </dd>
+
+                <dt class="col-sm-3 fw-bold">
+                    @Html.DisplayNameFor(model => model.VehicleIndexViewModel.ParkedTime)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.VehicleIndexViewModel.ParkedTime)
+                </dd>
+
+                <dt class="col-sm-3 fw-bold">
+                    @Html.DisplayNameFor(model => model.VehicleIndexViewModel.ParkedCost)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.VehicleIndexViewModel.ParkedCost)
                 </dd>
             </dl>
         </div>
     </div>
 
     <div class="d-flex justify-content-between mt-4">
-        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edit</a>
+        <a asp-action="Edit" asp-route-id="@Model?.Vehicle.Id" class="btn btn-warning">Edit</a>
         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </div>
 </div>
