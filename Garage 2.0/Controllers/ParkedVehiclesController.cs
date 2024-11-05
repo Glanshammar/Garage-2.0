@@ -39,6 +39,7 @@ namespace Garage_2._0.Controllers
             ViewData["RegistrationNumberSortParm"] = sortOrder == "registrationNumber" ? "registrationNumber_desc" : "registrationNumber";
             ViewData["ArrivalTimeSortParm"] = sortOrder == "arrivalTime" ? "arrivalTime_desc" : "arrivalTime";
             ViewData["WheelsSortParm"] = sortOrder == "wheels" ? "wheels_desc" : "wheels";
+            ViewData["ParkingSpotSortParm"] = sortOrder == "parkingSpot" ? "parkingSpot_desc" : "parkingSpot";
             ViewData["CurrentSort"] = sortOrder;
 
             List<ParkedVehicleIndexViewModel> model;
@@ -88,6 +89,8 @@ namespace Garage_2._0.Controllers
                 "arrivalTime_desc" => model.OrderByDescending(s => s.ArrivalTime).ToList(),
                 "wheels" => model.OrderBy(s => s.NumberOfWheels).ToList(),
                 "wheels_desc" => model.OrderByDescending(s => s.NumberOfWheels).ToList(),
+                "parkingSpot" => model.OrderBy(s => s.ParkingSpot).ToList(),
+                "parkingSpot_desc" => model.OrderByDescending(s => s.ParkingSpot).ToList(),
                 _ => model.OrderBy(s => s.VehicleType).ToList(),
             };
 
@@ -116,10 +119,6 @@ namespace Garage_2._0.Controllers
 
             return View("Index", model);
         }
-
-
-
-
 
         public async Task<IActionResult> Search()
         {
@@ -356,19 +355,21 @@ namespace Garage_2._0.Controllers
                 return NotFound();
             }
 
-            var checkoutViewModel = new CheckoutViewModel
+            var detailsViewModel = new DetailsViewModel
             {
-                Id = parkedVehicle.Id,
-                VehicleType = parkedVehicle.VehicleType,
-                RegistrationNumber = parkedVehicle.RegistrationNumber,
-                ArrivalTime = parkedVehicle.ArrivalTime,
-                ParkedTime = DateTime.Now.Subtract(parkedVehicle.ArrivalTime),
-                ParkingSpot = parkedVehicle.ParkingSpot,
-                CheckoutTime = DateTime.Now,
-                ParkedCost = CalculateParkingPrice(DateTime.Now.Subtract(parkedVehicle.ArrivalTime))
+                Vehicle = parkedVehicle,
+                VehicleIndexViewModel = new ParkedVehicleIndexViewModel
+                {
+                    Id = parkedVehicle.Id,
+                    VehicleType = parkedVehicle.VehicleType,
+                    RegistrationNumber = parkedVehicle.RegistrationNumber,
+                    ArrivalTime = parkedVehicle.ArrivalTime,
+                    ParkedTime = DateTime.Now.Subtract(parkedVehicle.ArrivalTime),
+                    ParkedCost = CalculateParkingPrice(DateTime.Now.Subtract(parkedVehicle.ArrivalTime))
+                }
             };
 
-            return View(checkoutViewModel);
+            return View(detailsViewModel);
         }
 
         // POST: ParkedVehicles/Checkout/5
