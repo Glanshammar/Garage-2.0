@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Garage_2._0.Data;
@@ -105,11 +101,25 @@ namespace Garage_2._0.Controllers
                     .ToDictionary(g => g.Key, g => g.Count())
             };
 
+
+            // Calculate the number of available parking spots
+            int totalParkingSpots = garage.numberOfParkingSpots;
+            int occupiedSpots = model.Count;
+            int availableSpots = totalParkingSpots - occupiedSpots;
+
+            // Pass available spots to the view using ViewBag
+            ViewBag.AvailableSpots = availableSpots;
+
+
             // Pass both model and statistics to the view using ViewData
             ViewData["Statistics"] = statistics;
 
-            return View("Index", model ?? new List<ParkedVehicleIndexViewModel>());
+            return View("Index", model);
         }
+
+
+
+
 
         public async Task<IActionResult> Search()
         {
@@ -165,7 +175,23 @@ namespace Garage_2._0.Controllers
                 return NotFound();
             }
 
-            return View(parkedVehicle);
+            // Create and populate the DetailsViewModel
+            var viewModel = new DetailsViewModel
+            {
+                Vehicle = parkedVehicle,
+                VehicleIndexViewModel = new ParkedVehicleIndexViewModel
+                {
+                    Id = parkedVehicle.Id,
+                    VehicleType = parkedVehicle.VehicleType,
+                    RegistrationNumber = parkedVehicle.RegistrationNumber,
+                    NumberOfWheels = parkedVehicle.NumberOfWheels,
+                    ArrivalTime = parkedVehicle.ArrivalTime,
+                    ParkedTime = DateTime.Now - parkedVehicle.ArrivalTime,
+                    ParkedCost = CalculateParkingPrice(DateTime.Now - parkedVehicle.ArrivalTime)
+                }
+            };
+
+            return View(viewModel);
         }
 
         // GET: ParkedVehicles/Create

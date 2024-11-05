@@ -31,5 +31,11 @@
 
         }
 
+        public int GetAvailableSpots()
+        {
+            return ParkingSpots.Count(p => !p.occupied);
+        }
+
+
     }
 }
